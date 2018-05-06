@@ -1,19 +1,52 @@
 /**
- * Living room sensor
+ * Import external libraries
  */
-const logger = require('winston');
-const alfredHelper = require('../lib/helper.js');
+const serviceHelper = require('../lib/helper.js');
 const dateFormat = require('dateformat');
+const lightsHelper = require('../api/lights/lights.js');
+const { Client } = require('pg');
 
-exports.processData = async function FnProcessData(sensor) {
+async function checkOffTimerIsActive(timerID) {
+  // Create data store connection
+  const client = new Client({
+    host: process.env.DataStore,
+    database: 'schedules',
+    user: process.env.DataStoreUser,
+    password: process.env.DataStoreUserPassword,
+    port: 5432,
+  });
+
+  let active = true;
+
+  const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
+  try {
+    serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', `Getting data for timer ${timerID}`);
+    await client.connect();
+    const results = await client.query(SQL);
+    await client.end();
+    if (results.rowCount === 0) { active = false; }
+    return active;
+  } catch (err) {
+    serviceHelper.log('error', 'Livingroom - checkOffTimerIsActive', err);
+    await client.end();
+    return false;
+  }
+}
+
+exports.processData = async (sensor) => {
+  const turnOffIn = 180000; // 3 minutes
+
   let motion = false;
   let lowLight = false;
-  const turnOffIn = 180000;
+  let req;
+  let offTimerActive;
 
   // Check sensors
   try {
+    serviceHelper.log('trace', 'Livingroom - processData', 'Processing sensor data');
+
     // Living room lights are off so check motion and brightness
-    sensor.data.forEach((sensorItem) => {
+    sensor.forEach((sensorItem) => {
       if (sensorItem.attributes.attributes.id === '19') { // Motion sensor
         if (sensorItem.state.attributes.attributes.presence) motion = true;
       }
@@ -23,67 +56,84 @@ exports.processData = async function FnProcessData(sensor) {
     });
 
     if (motion && lowLight) {
-      const lightstate = await alfredHelper.getAPIdata(`${process.env.alfred}lights/lightstate?light_number=2`);
-      if (!lightstate.data.on) {
+      serviceHelper.log('trace', 'Livingroom - processData', 'Motion and light activated');
+
+      req = { body: { lightGroupNumber: 8 } };
+      const lightstate = await lightsHelper.lightGroupState(req);
+
+      if (!lightstate.on) {
         let body;
         const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
         let turnOffLightTimer = false;
 
         // Decide what scene and brightness to use depending upon time of day
+        serviceHelper.log('trace', 'Livingroom - processData', 'Decide what scene and brightness to use depending upon time of day');
 
         // if current time > mid-night then show low, read scene
-        if (currentTime > '00:01' && currentTime < '06:29') {
+        if (currentTime >= '00:00' && currentTime < '06:30') {
           body = {
-            light_number: 8, light_status: 'on', brightness: 64, ct: 348,
+            lightGroupNumber: 8, lightAction: 'on', brightness: 64, ct: 348,
           };
           turnOffLightTimer = true;
         }
 
         // if current time > 6:30am then show mid, energise scene
-        if (currentTime > '06:30' && currentTime < '08:29') {
+        if (currentTime >= '06:30' && currentTime < '08:30') {
           body = {
-            light_number: 8, light_status: 'on', brightness: 128, ct: 156,
+            lightGroupNumber: 8, lightAction: 'on', brightness: 128, ct: 156,
           };
-          // TODO - check if morning lights off is not set then set turnOffLightTimer = true
+          offTimerActive = await checkOffTimerIsActive(4);
+          if (!offTimerActive) turnOffLightTimer = true;
         }
 
-        // if current time > 8:31am then show high, concentrate scene
-        if (currentTime > '08:31' && currentTime < '14.59') {
+        // if current time > 8:30am then show high, concentrate scene
+        if (currentTime >= '08:30' && currentTime < '15:00') {
           body = {
-            light_number: 8, light_status: 'on', brightness: 192, ct: 233,
+            lightGroupNumber: 8, lightAction: 'on', brightness: 192, ct: 233,
           };
           turnOffLightTimer = true;
         }
 
         // if current time > 3pm then show high, concentrate scene
-        if (currentTime > '15:00' && currentTime < '19.29') {
+        if (currentTime >= '15:00' && currentTime < '19:30') {
           body = {
-            light_number: 8, light_status: 'on', brightness: 256, ct: 233,
+            lightGroupNumber: 8, lightAction: 'on', brightness: 254, ct: 233,
           };
-          // TODO - check if evening lights off is not set then set turnOffLightTimer = true
+          offTimerActive = await checkOffTimerIsActive(5);
+          if (!offTimerActive) turnOffLightTimer = true;
+        }
+
+        // if current time > 7:30pm then show mid, read scene
+        if (currentTime >= '19:30' && currentTime < '22:00') {
+          body = {
+            lightGroupNumber: 8, lightAction: 'on', brightness: 100, ct: 348,
+          };
+          offTimerActive = await checkOffTimerIsActive(5);
+          if (!offTimerActive) turnOffLightTimer = true;
         }
 
         // if current time > 10pm then show low, read scene
-        if (currentTime > '22:01' && currentTime < '23:59') {
+        if (currentTime >= '22:00' && currentTime < '00:00') {
           body = {
-            light_number: 8, light_status: 'on', brightness: 64, ct: 348,
+            lightGroupNumber: 8, lightAction: 'on', brightness: 64, ct: 348,
           };
           turnOffLightTimer = true;
         }
 
-        // Call Alfred with payload
-        alfredHelper.putAPIdata(`${process.env.alfred}lights/lightgrouponoff`, body);
+        req = { body };
+        lightsHelper.lightGroupOnOff(req);
 
         if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
+          serviceHelper.log('trace', 'Livingroom - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
           setTimeout(() => {
-            body = { light_number: 8, light_status: 'off' };
-            alfredHelper.putAPIdata(`${process.env.alfred}lights/lightgrouponoff`, body);
+            req = { body: { lightGroupNumber: 8, lightAction: 'off' } };
+            lightsHelper.lightGroupOnOff(req);
           }, turnOffIn);
         }
       }
     }
   } catch (err) {
-    logger.error(`Livingroom sensor - processData: ${err}`);
+    serviceHelper.log('error', 'Livingroom - processData', err);
   }
 };

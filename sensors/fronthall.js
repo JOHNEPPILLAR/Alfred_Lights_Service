@@ -1,45 +1,83 @@
 /**
- * Front hall sensor
+ * Import external libraries
  */
-const logger = require('winston');
-const alfredHelper = require('../lib/helper.js');
+const serviceHelper = require('../lib/helper.js');
+const dateFormat = require('dateformat');
+const lightsHelper = require('../api/lights/lights.js');
 
-let hallMotionSensorActive = true; // Make the hall sensor active
+exports.processData = async (sensor) => {
+  const turnOffIn = 180000; // 3 minutes
 
-exports.processData = async function FnProcessData(sensor) {
-  if (hallMotionSensorActive) { // Only process if the hall lights were not on
-    let motion = false;
-    let lowLight = false;
-    const turnOffIn = 180000;
+  let motion = false;
+  let lowLight = false;
+  let req;
 
-    // Check sensors
-    try {
-      sensor.data.forEach((sensorItem) => {
-        if (sensorItem.attributes.attributes.id === '13') { // Motion sensor
-          if (sensorItem.state.attributes.attributes.presence) motion = true;
+  // Check sensors
+  try {
+    serviceHelper.log('trace', 'Fronthall - processData', 'Processing sensor data');
+
+    // Living room lights are off so check motion and brightness
+    sensor.forEach((sensorItem) => {
+      if (sensorItem.attributes.attributes.id === '13') { // Motion sensor
+        if (sensorItem.state.attributes.attributes.presence) motion = true;
+      }
+      if (sensorItem.attributes.attributes.id === '14') { // Ambient light sensor
+        if (sensorItem.state.attributes.attributes.lightlevel <= sensorItem.config.attributes.attributes.tholddark) lowLight = true;
+      }
+    });
+
+    if (motion && lowLight) {
+      serviceHelper.log('trace', 'Fronthall - processData', 'Motion and light activated');
+
+      req = { body: { lightGroupNumber: 7 } };
+      const lightstate = await lightsHelper.lightGroupState(req);
+
+      if (!lightstate.on) {
+        let body;
+        const currentTime = (dateFormat(new Date(), 'HH:MM'));
+
+        let turnOffLightTimer = false;
+
+        // Decide what scene and brightness to use depending upon time of day
+        serviceHelper.log('trace', 'Fronthall - processData', 'Decide what scene and brightness to use depending upon time of day');
+
+        // if current time > mid-night then show low light
+        if (currentTime >= '00:00' && currentTime < '08:30') {
+          body = {
+            lightGroupNumber: 7, lightAction: 'on', brightness: 60,
+          };
+          turnOffLightTimer = true;
         }
-        if (sensorItem.attributes.attributes.id === '14') { // Ambient light sensor
-          if (sensorItem.state.attributes.attributes.lightlevel <= sensorItem.config.attributes.attributes.tholddark) lowLight = true;
-        }
-      });
-      if (motion && lowLight) {
-        const lightstate = await alfredHelper.getAPIdata(`${process.env.alfred}lights/lightstate?light_number=13&scheduler=true`);
-        if (!lightstate.data.on) {
-          let body = { light_number: 7, light_status: 'on', brightness: 64 };
-          alfredHelper.putAPIdata(`${process.env.alfred}lights/lightgrouponoff`, body);
-          hallMotionSensorActive = false; // Turn off motion sensor as lights are on
 
-          // Schedule to turn off lights after 3 minutes
+        // if current time > 8:30am then show high light
+        if (currentTime >= '08:30' && currentTime < '19:30') {
+          body = {
+            lightGroupNumber: 7, lightAction: 'on', brightness: 192,
+          };
+          turnOffLightTimer = true;
+        }
+
+        // if current time > 7:30pm then show low light
+        if (currentTime >= '19:30' && currentTime < '00:00') {
+          body = {
+            lightGroupNumber: 7, lightAction: 'on', brightness: 60,
+          };
+          turnOffLightTimer = true;
+        }
+
+        req = { body };
+        lightsHelper.lightGroupOnOff(req);
+
+        if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
+          serviceHelper.log('trace', 'Fronthall - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
           setTimeout(() => {
-            body = { light_number: 7, light_status: 'off', brightness: 10 };
-            alfredHelper.putAPIdata(`${process.env.alfred}lights/lightgrouponoff`, body);
-            hallMotionSensorActive = true; // Re-activate motion sensor as lights are now off
+            req = { body: { lightGroupNumber: 7, lightAction: 'off' } };
+            lightsHelper.lightGroupOnOff(req);
           }, turnOffIn);
         }
       }
-    } catch (err) {
-      logger.error(`Front hall sensor - processData: ${err}`);
     }
+  } catch (err) {
+    serviceHelper.log('error', 'Fronthall - processData', err);
   }
 };
-

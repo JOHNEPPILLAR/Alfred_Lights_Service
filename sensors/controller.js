@@ -1,46 +1,54 @@
-const logger = require('winston');
-const alfredHelper = require('../lib/helper.js');
+/**
+ * Import external libraries
+ */
+const serviceHelper = require('../lib/helper.js');
+const lightsHelper = require('../api/lights/lights.js');
+
 const livingRoomSensor = require('./livingroom.js');
 const frontHallSensor = require('./fronthall.js');
 const middleHallSensor = require('./middlehall.js');
 
-exports.setupSensors = async function FnSetupSensors() {
-  const threeSeconds = 3000;
-  let timer = threeSeconds;
+const threeSeconds = 3000;
+let timer = 3000;
 
-  // Get metion sensor data
-  async function getSensorData() {
-    try {
-      const apiData = await alfredHelper.getAPIdata(`${process.env.alfred}lights/lightmotion`);
+// Process sensor data
+async function processSensorData(apiData) {
+  livingRoomSensor.processData(apiData); // Living room sensor
+  frontHallSensor.processData(apiData); // Front hall sensor
+  middleHallSensor.processData(apiData); // Middle hall sensor
+}
 
-      // Now process data
-      livingRoomSensor.processData(apiData); // Living room sensor
-      frontHallSensor.processData(apiData); // Front hall sensor
-      middleHallSensor.processData(apiData); // Middle hall sensor
+// Get sensor data
+async function getSensorData() {
+  serviceHelper.log('trace', 'getSensorData', 'Get sensor data');
+  try {
+    const apiData = await lightsHelper.lightMotion();
+    processSensorData(apiData);
 
-      // Check timer frequency
-      if (timer > threeSeconds) {
-        timer = threeSeconds; // Reset timer to back 3 seconds
-        logger.info('Resetting the timer back to 3 seconds');
-      }
-    } catch (err) {
-      logger.error(`getSensorData: ${err}`);
-      if (timer === threeSeconds) {
-        logger.info('Upping the timer to 60 seconds');
-        timer = 60000; // Set timer to 60 seconds
-      }
-      return err;
+    // Check timer frequency
+    if (timer > threeSeconds) {
+      timer = threeSeconds; // Reset timer to back 3 seconds
+      serviceHelper.log('info', 'getSensorData', `Setting timer to ${timer / 1000} seconds`);
     }
-    return null;
+  } catch (err) {
+    serviceHelper.log('error', 'getSensorData', err);
+    if (timer === threeSeconds) {
+      timer *= 3; // Set timer to 9 seconds
+      serviceHelper.log('info', 'getSensorData', `Setting timer to ${timer / 1000} seconds`);
+    }
+    return err;
   }
+  return null;
+}
 
-  // Setup timer function to run every 3 seconds
-  function setMotionSensorSchedule() {
-    setTimeout(() => {
-      getSensorData(); // Get data from Hue hub and then process it
-      setMotionSensorSchedule(); // Recursive call back to this function
-    }, timer);
-  }
+// Setup timer function to run every x seconds
+function setup() {
+  setTimeout(() => {
+    getSensorData(); // Get data from Hue hub and then process it
+    setup(); // Recursive call back to this function
+  }, timer);
+}
 
-  setMotionSensorSchedule();
+exports.setup = () => {
+  setup();
 };

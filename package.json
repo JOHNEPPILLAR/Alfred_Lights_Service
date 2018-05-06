@@ -20,7 +20,8 @@
     "pure-uuid": "*",
     "ip": "*",
     "os": "*",
-    "huejay": "*"
+    "huejay": "*",
+    "pg": "*"
   },
   "devDependencies": {
     "eslint": "*",
