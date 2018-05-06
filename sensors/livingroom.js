@@ -61,7 +61,7 @@ exports.processData = async (sensor) => {
       req = { body: { lightGroupNumber: 8 } };
       const lightstate = await lightsHelper.lightGroupState(req);
 
-      if (!lightstate.on) {
+      if (!lightstate.any_on) {
         let body;
         const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
@@ -114,7 +114,7 @@ exports.processData = async (sensor) => {
         }
 
         // if current time > 10pm then show low, read scene
-        if (currentTime >= '22:00' && currentTime < '00:00') {
+        if (currentTime >= '22:00' && currentTime <= '23:59') {
           body = {
             lightGroupNumber: 8, lightAction: 'on', brightness: 64, ct: 348,
           };

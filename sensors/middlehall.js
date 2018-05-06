@@ -75,7 +75,7 @@ exports.processData = async (sensor) => {
         }
 
         // if current time > 9pm then show low, read scene
-        if (currentTime >= '21:00' && currentTime < '00:00') {
+        if (currentTime >= '21:00' && currentTime <= '23:59') {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 60, ct: 348,
           };

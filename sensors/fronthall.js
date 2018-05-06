@@ -32,7 +32,7 @@ exports.processData = async (sensor) => {
       req = { body: { lightGroupNumber: 7 } };
       const lightstate = await lightsHelper.lightGroupState(req);
 
-      if (!lightstate.on) {
+      if (!lightstate.any_on) {
         let body;
         const currentTime = (dateFormat(new Date(), 'HH:MM'));
 

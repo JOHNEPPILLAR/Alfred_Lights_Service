@@ -50,5 +50,6 @@ function setup() {
 }
 
 exports.setup = () => {
-  setup();
+  // setup();
+  getSensorData();
 };
