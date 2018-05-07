@@ -37,8 +37,6 @@ exports.processData = async (sensor) => {
         let body;
         const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
-        let turnOffLightTimer = false;
-
         // Decide what scene and brightness to use depending upon time of day
         serviceHelper.log('trace', 'Middlehall - processData', 'Decide what scene and brightness to use depending upon time of day');
 
@@ -47,7 +45,6 @@ exports.processData = async (sensor) => {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 60, ct: 348,
           };
-          turnOffLightTimer = true;
         }
 
         // if current time > 6:30am then show mid, energise scene
@@ -55,7 +52,6 @@ exports.processData = async (sensor) => {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 128, ct: 156,
           };
-          turnOffLightTimer = true;
         }
 
         // if current time > 3:30pm then show high, concentrate scene
@@ -63,7 +59,6 @@ exports.processData = async (sensor) => {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 200, ct: 233,
           };
-          turnOffLightTimer = true;
         }
 
         // if current time > 7:30pm then show mid, energise scene
@@ -71,7 +66,6 @@ exports.processData = async (sensor) => {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 128, ct: 156,
           };
-          turnOffLightTimer = true;
         }
 
         // if current time > 9pm then show low, read scene
@@ -79,19 +73,16 @@ exports.processData = async (sensor) => {
           body = {
             lightNumber: 1, lightAction: 'on', brightness: 60, ct: 348,
           };
-          turnOffLightTimer = true;
         }
 
         req = { body };
         lightsHelper.lightOnOff(req);
 
-        if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-          serviceHelper.log('trace', 'Middlehall - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
-          setTimeout(() => {
-            req = { body: { lightNumber: 1, lightAction: 'off' } };
-            lightsHelper.lightOnOff(req);
-          }, turnOffIn);
-        }
+        serviceHelper.log('trace', 'Middlehall - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
+        setTimeout(() => {
+          req = { body: { lightNumber: 1, lightAction: 'off' } };
+          lightsHelper.lightOnOff(req);
+        }, turnOffIn);
       }
     }
   } catch (err) {

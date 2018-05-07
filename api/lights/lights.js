@@ -182,7 +182,7 @@ async function lightOnOff(req, res, next) {
 
   try {
     // Configure light state
-    serviceHelper.log('trace', 'lightOnOff', 'Setting up light state to save');
+    serviceHelper.log('trace', 'lightOnOff', `Setting up light state ${serviceHelper.getLightName(lightNumber)} to save`);
     const light = await hue.lights.getById(lightNumber);
     light.on = false;
     if (lightAction === 'on') {
@@ -200,7 +200,7 @@ async function lightOnOff(req, res, next) {
     }
 
     // Save light state
-    serviceHelper.log('trace', 'lightOnOff', 'Saving light state');
+    serviceHelper.log('trace', 'lightOnOff', `Saving light ${serviceHelper.getLightName(lightNumber)} state`);
     const saved = await hue.lights.save(light);
     if (saved) {
       returnState = true;
