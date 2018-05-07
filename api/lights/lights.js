@@ -499,6 +499,172 @@ async function lightGroupState(req, res, next) {
 }
 skill.get('/lightgroupstate', lightGroupState);
 
+/**
+ * @api {get} /lights/scenes List all light scenes
+ * @apiName scenes
+ * @apiGroup Lights
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTPS/1.1 200 OK
+ *   {
+ *     sucess: 'true'
+ *     data: Hue bridge API response
+ *   }
+ *
+ * @apiErrorExample {json} Error-Response:
+ *   HTTPS/1.1 500 Internal error
+ *   {
+ *     data: Error message
+ *   }
+ *
+ */
+async function scenes(req, res, next) {
+  try {
+    serviceHelper.log('trace', 'scenes', 'scenes API called');
+    const lights = await hue.scenes.getAll();
+
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, true, lights);
+      next();
+    } else {
+      return lights;
+    }
+  } catch (err) {
+    serviceHelper.log('error', 'scenes', err);
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, null, err);
+      next();
+    } else {
+      return err;
+    }
+  }
+  return true;
+}
+skill.get('/scenes', scenes);
+
+/**
+ * @api {put} /lights/lightbrightness Update light brightness
+ * @apiName lightbrightness
+ * @apiGroup Lights
+ *
+ * @apiParam {Number} lightNumber Hue bridge light group number
+ * @apiParam {Number} brightness Brighness [ 0..255 ]
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTPS/1.1 200 OK
+ *   {
+ *     sucess: 'true'
+ *     data: "The light group was updated."
+ *   }
+ *
+ * @apiErrorExample {json} Error-Response:
+ *   HTTPS/1.1 500 Internal error
+ *   {
+ *     data: Error message
+ *   }
+ *
+ */
+async function lightBrightness(req, res, next) {
+  let returnMessage;
+  let returnState;
+
+  try {
+    serviceHelper.log('trace', 'lightBrightness', 'lightBrightness API called');
+    serviceHelper.log('trace', 'lightBrightness', JSON.stringify(req.body));
+
+    const { lightNumber, brightness } = req.body;
+    const lights = await hue.groups.getById(lightNumber);
+    lights.brightness = brightness;
+    const saved = await hue.groups.save(lights);
+    if (saved) {
+      returnState = true;
+      returnMessage = `Light group ${serviceHelper.getLightGroupName(lightNumber)} brightness was set to ${brightness}.`;
+      serviceHelper.log('trace', 'lightBrightness', `Light group ${serviceHelper.getLightGroupName(lightNumber)} brightness was set to ${brightness}.`);
+    } else {
+      returnState = false;
+      returnMessage = `There was an error updating light group ${lightNumber} brighness to ${brightness}.`;
+      serviceHelper.log('error', 'lightBrightness', `There was an error updating light group ${lightNumber} brighness to ${brightness}.`);
+    }
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, returnState, returnMessage);
+      next();
+    } else {
+      return returnMessage;
+    }
+  } catch (err) {
+    serviceHelper.log('error', 'lightBrightness', err);
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, null, err); // Send response back to caller
+      next();
+    } else {
+      return err;
+    }
+  }
+  return true;
+}
+skill.put('/lightbrightness', lightBrightness);
+
+/**
+ * @api {put} /lights/lightgroupbrightness Update light group brightness
+ * @apiName lightgroupbrightness
+ * @apiGroup Lights
+ *
+ * @apiParam {Number} lightGroupNumber Hue bridge light group number
+ * @apiParam {Number} brightness Brighness [ 0..255 ]
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTPS/1.1 200 OK
+ *   {
+ *     sucess: 'true'
+ *     data: "The light group was updated."
+ *   }
+ *
+ * @apiErrorExample {json} Error-Response:
+ *   HTTPS/1.1 500 Internal error
+ *   {
+ *     data: Error message
+ *   }
+ *
+ */
+async function lightGroupBrightness(req, res, next) {
+  let returnMessage;
+  let returnState;
+
+  try {
+    serviceHelper.log('trace', 'lightGroupBrightness', 'lightGroupBrightness API called');
+    serviceHelper.log('trace', 'lightGroupBrightness', JSON.stringify(req.body));
+
+    const { lightGroupNumber, brightness } = req.body;
+    const lights = await hue.groups.getById(lightGroupNumber);
+    lights.brightness = brightness;
+    const saved = await hue.groups.save(lights);
+    if (saved) {
+      returnState = true;
+      returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`;
+      serviceHelper.log('trace', 'lightGroupBrightness', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`);
+    } else {
+      returnState = false;
+      returnMessage = `There was an error updating light group ${lightGroupNumber} brighness to ${brightness}.`;
+      serviceHelper.log('error', 'lightGroupBrightness', `There was an error updating light group ${lightGroupNumber} brighness to ${brightness}.`);
+    }
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, returnState, returnMessage);
+      next();
+    } else {
+      return returnMessage;
+    }
+  } catch (err) {
+    serviceHelper.log('error', 'lightGroupBrightness', err);
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, null, err); // Send response back to caller
+      next();
+    } else {
+      return err;
+    }
+  }
+  return true;
+}
+skill.put('/lightgroupbrightness', lightGroupBrightness);
 
 module.exports = {
   skill,
