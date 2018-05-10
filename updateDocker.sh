@@ -6,5 +6,5 @@ docker rm alfred_lights_service
 docker rmi alfred_lights_service
 
 echo "Build & run new ver"
-sudo docker build --no-cache --rm=true -t alfred_lights_service .
+docker build --no-cache --rm=true -t alfred_lights_service .
 docker run -d --restart=always --name alfred_lights_service -p 3982:3982 alfred_lights_service
