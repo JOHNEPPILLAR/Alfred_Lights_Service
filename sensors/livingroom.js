@@ -83,7 +83,7 @@ exports.processData = async (sensor) => {
           body = {
             lightGroupNumber: 8, lightAction: 'on', brightness: 128, ct: 156,
           };
-          offTimerActive = await checkOffTimerIsActive(4);
+          offTimerActive = await checkOffTimerIsActive(1);
           if (!offTimerActive) turnOffLightTimer = true;
         }
 
@@ -100,7 +100,7 @@ exports.processData = async (sensor) => {
           body = {
             lightGroupNumber: 8, lightAction: 'on', brightness: 254, ct: 233,
           };
-          offTimerActive = await checkOffTimerIsActive(5);
+          offTimerActive = await checkOffTimerIsActive(2);
           if (!offTimerActive) turnOffLightTimer = true;
         }
 
@@ -109,7 +109,7 @@ exports.processData = async (sensor) => {
           body = {
             lightGroupNumber: 8, lightAction: 'on', brightness: 100, ct: 348,
           };
-          offTimerActive = await checkOffTimerIsActive(5);
+          offTimerActive = await checkOffTimerIsActive(2);
           if (!offTimerActive) turnOffLightTimer = true;
         }
 
