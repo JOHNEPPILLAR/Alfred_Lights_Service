@@ -12,16 +12,16 @@
     "dateformat": "*",
     "dotenv": "*",
     "fs": "*",
+    "huejay": "*",
+    "ip": "*",
+    "os": "*",
+    "pg": "*",
+    "pure-uuid": "*",
     "request": "*",
     "request-promise": "*",
     "restify": "*",
     "restify-router": "*",
-    "winston": "*",
-    "pure-uuid": "*",
-    "ip": "*",
-    "os": "*",
-    "huejay": "*",
-    "pg": "*"
+    "winston": "*"
   },
   "devDependencies": {
     "eslint": "*",

@@ -5,6 +5,27 @@ const serviceHelper = require('../lib/helper.js');
 const dateFormat = require('dateformat');
 const lightsHelper = require('../api/lights/lights.js');
 
+function checkOffTimerIsActive(timerID) {
+  let active = true;
+  let results;
+
+  (async () => {
+    try {
+      const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
+      serviceHelper.log('trace', 'Fronthall - checkOffTimerIsActive', `Getting data for timer ${timerID}`);
+      await global.schedulesDataClient.connect(); // Connect to data store
+      results = await global.schedulesDataClient.query(SQL);
+    } finally {
+      global.schedulesDataClient.release(); // Return data store connection back to pool
+    }
+    if (results.rowCount === 0) active = false;
+    return active;
+  })().catch((err) => {
+    serviceHelper.log('errir', 'Fronthall - checkOffTimerIsActive', err);
+    return false;
+  });
+}
+
 exports.processData = async (sensor) => {
   const turnOffIn = 180000; // 3 minutes
 
@@ -34,50 +55,80 @@ exports.processData = async (sensor) => {
 
       if (!lightstate.any_on) {
         let body;
-        const currentTime = (dateFormat(new Date(), 'HH:MM'));
-
         let turnOffLightTimer = false;
+        let lightData;
+
+        (async () => {
+          try {
+            const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turnOff FROM sensor_settings WHERE active AND sensor_id = 1';
+            serviceHelper.log('trace', 'Fronthall - processData', 'Get list of settings from data store');
+            await global.lightsDataClient.connect(); // Connect to data store
+            lightData = await global.lightsDataClient.query(SQL);
+          } finally {
+            global.lightsDataClient.release(); // Return data store connection back to pool
+          }
+        })().catch((err) => {
+          serviceHelper.log('errir', 'Fronthall - processData', err);
+          return false;
+        });
+
+        if (lightData.rowCount === 0) {
+          serviceHelper.log('trace', 'Fronthall - processData', 'No active light sensor settings');
+          return false;
+        }
 
         // Decide what scene and brightness to use depending upon time of day
         serviceHelper.log('trace', 'Fronthall - processData', 'Decide what scene and brightness to use depending upon time of day');
 
-        // if current time > mid-night then show low light
-        if (currentTime >= '00:00' && currentTime < '08:30') {
-          body = {
-            lightGroupNumber: 7, lightAction: 'on', brightness: 60,
-          };
-          turnOffLightTimer = true;
-        }
+        const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
-        // if current time > 8:30am then show high light
-        if (currentTime >= '08:30' && currentTime < '19:30') {
-          body = {
-            lightGroupNumber: 7, lightAction: 'on', brightness: 192,
-          };
-          turnOffLightTimer = true;
-        }
+        lightData.rows.forEach(async (lightInfo) => {
+          if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
+            serviceHelper.log('trace', 'Fronthall - processData', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
 
-        // if current time > 7:30pm then show low light
-        if (currentTime >= '19:30' && currentTime < '00:00') {
-          body = {
-            lightGroupNumber: 7, lightAction: 'on', brightness: 60,
-          };
-          turnOffLightTimer = true;
-        }
+            serviceHelper.log('trace', 'Fronthall - processData', 'Construct the api call');
+            body = {
+              lightGroupNumber: lightInfo.light_group_number,
+              lightAction: lightInfo.light_action,
+              brightness: lightInfo.brightness,
+            };
 
-        req = { body };
-        lightsHelper.lightGroupOnOff(req);
+            if (lightInfo.ct != null) body.ct = lightInfo.ct;
+            serviceHelper.log('trace', 'Fronthall - processData', JSON.stringify(body));
 
-        if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-          serviceHelper.log('trace', 'Fronthall - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
-          setTimeout(() => {
-            req = { body: { lightGroupNumber: 7, lightAction: 'off' } };
+            serviceHelper.log('trace', 'Fronthall - processData', 'Figure out if lights require turning off');
+            switch (lightInfo.turn_off) {
+              case 'TRUE':
+                turnOffLightTimer = true;
+                break;
+              case 'FALSE':
+                turnOffLightTimer = false;
+                break;
+              default:
+                try {
+                  turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
+                } catch (err) {
+                  serviceHelper.log('errir', 'Fronthall - processData', err);
+                }
+            }
+
+            req = { body };
+            serviceHelper.log('trace', 'Fronthall - processData', req);
             lightsHelper.lightGroupOnOff(req);
-          }, turnOffIn);
-        }
+
+            if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
+              serviceHelper.log('trace', 'Fronthall - processData', `Setting ${serviceHelper.getLightGroupName(8)} lights timer to turn off in 3 minutes`);
+              setTimeout(() => {
+                req = { body: { lightGroupNumber: 7, lightAction: 'off' } };
+                lightsHelper.lightGroupOnOff(req);
+              }, turnOffIn);
+            }
+          }
+        });
       }
     }
   } catch (err) {
     serviceHelper.log('error', 'Fronthall - processData', err);
   }
+  return true;
 };

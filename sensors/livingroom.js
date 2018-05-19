@@ -4,33 +4,27 @@
 const serviceHelper = require('../lib/helper.js');
 const dateFormat = require('dateformat');
 const lightsHelper = require('../api/lights/lights.js');
-const { Client } = require('pg');
 
-async function checkOffTimerIsActive(timerID) {
-  // Create data store connection
-  const client = new Client({
-    host: process.env.DataStore,
-    database: 'schedules',
-    user: process.env.DataStoreUser,
-    password: process.env.DataStoreUserPassword,
-    port: 5432,
-  });
-
+function checkOffTimerIsActive(timerID) {
+  serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', `Getting data for timer ${timerID}`);
   let active = true;
+  let results;
 
-  const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
-  try {
-    serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', `Getting data for timer ${timerID}`);
-    await client.connect();
-    const results = await client.query(SQL);
-    await client.end();
-    if (results.rowCount === 0) { active = false; }
+  (async () => {
+    try {
+      const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
+      serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', 'Get list of settings from data store');
+      await global.schedulesDataClient.connect(); // Connect to data store
+      results = await global.schedulesDataClient.query(SQL);
+    } finally {
+      global.schedulesDataClient.release(); // Return data store connection back to pool
+    }
+    if (results.rowCount === 0) active = false;
     return active;
-  } catch (err) {
-    serviceHelper.log('error', 'Livingroom - checkOffTimerIsActive', err);
-    await client.end();
+  })().catch((err) => {
+    serviceHelper.log('errir', 'Livingroom - checkOffTimerIsActive', err);
     return false;
-  }
+  });
 }
 
 exports.processData = async (sensor) => {
@@ -39,7 +33,6 @@ exports.processData = async (sensor) => {
   let motion = false;
   let lowLight = false;
   let req;
-  let offTimerActive;
 
   // Check sensors
   try {
@@ -63,77 +56,79 @@ exports.processData = async (sensor) => {
 
       if (!lightstate.any_on) {
         let body;
-        const currentTime = (dateFormat(new Date(), 'HH:MM'));
-
         let turnOffLightTimer = false;
+        let lightData;
+
+        (async () => {
+          try {
+            const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, ct FROM sensor_settings WHERE active AND sensor_id = 2';
+            serviceHelper.log('trace', 'Livingroom - processData', 'Get list of settings from data store');
+            await global.lightsDataClient.connect(); // Connect to data store
+            lightData = await global.lightsDataClient.query(SQL);
+          } finally {
+            global.lightsDataClient.release(); // Return data store connection back to pool
+          }
+        })().catch((err) => {
+          serviceHelper.log('errir', 'Livingroom - processData', err);
+          return false;
+        });
+
+        if (lightData.rowCount === 0) {
+          serviceHelper.log('trace', 'Livingroom - processData', 'No active light sensor settings');
+          return false;
+        }
 
         // Decide what scene and brightness to use depending upon time of day
         serviceHelper.log('trace', 'Livingroom - processData', 'Decide what scene and brightness to use depending upon time of day');
 
-        // if current time > mid-night then show low, read scene
-        if (currentTime >= '00:00' && currentTime < '06:30') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 64, ct: 348,
-          };
-          turnOffLightTimer = true;
-        }
+        const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
-        // if current time > 6:30am then show mid, energise scene
-        if (currentTime >= '06:30' && currentTime < '08:30') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 128, ct: 156,
-          };
-          offTimerActive = await checkOffTimerIsActive(1);
-          if (!offTimerActive) turnOffLightTimer = true;
-        }
+        lightData.rows.forEach(async (lightInfo) => {
+          if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
+            serviceHelper.log('trace', 'Livingroom - processData', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
 
-        // if current time > 8:30am then show high, concentrate scene
-        if (currentTime >= '08:30' && currentTime < '15:00') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 192, ct: 233,
-          };
-          turnOffLightTimer = true;
-        }
+            serviceHelper.log('trace', 'Livingroom - processData', 'Construct the api call');
+            body = {
+              lightGroupNumber: lightInfo.light_group_number,
+              lightAction: lightInfo.light_action,
+              brightness: lightInfo.brightness,
+            };
 
-        // if current time > 3pm then show high, concentrate scene
-        if (currentTime >= '15:00' && currentTime < '19:30') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 254, ct: 233,
-          };
-          offTimerActive = await checkOffTimerIsActive(2);
-          if (!offTimerActive) turnOffLightTimer = true;
-        }
+            if (lightInfo.ct != null) body.ct = lightInfo.ct;
+            serviceHelper.log('trace', 'Livingroom - processData', JSON.stringify(body));
 
-        // if current time > 7:30pm then show mid, read scene
-        if (currentTime >= '19:30' && currentTime < '22:00') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 100, ct: 348,
-          };
-          offTimerActive = await checkOffTimerIsActive(2);
-          if (!offTimerActive) turnOffLightTimer = true;
-        }
+            serviceHelper.log('trace', 'Livingroom - processData', 'Figure out if lights require turning off');
+            switch (lightInfo.turn_off) {
+              case 'TRUE':
+                turnOffLightTimer = true;
+                break;
+              case 'FALSE':
+                turnOffLightTimer = false;
+                break;
+              default:
+                try {
+                  turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
+                } catch (err) {
+                  serviceHelper.log('errir', 'Livingroom - processData', err);
+                }
+            }
 
-        // if current time > 10pm then show low, read scene
-        if (currentTime >= '22:00' && currentTime <= '23:59') {
-          body = {
-            lightGroupNumber: 8, lightAction: 'on', brightness: 64, ct: 348,
-          };
-          turnOffLightTimer = true;
-        }
-
-        req = { body };
-        lightsHelper.lightGroupOnOff(req);
-
-        if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-          serviceHelper.log('trace', 'Livingroom - processData', `Setting timer to turn off ${serviceHelper.getLightGroupName(8)} lights in 3 minutes`);
-          setTimeout(() => {
-            req = { body: { lightGroupNumber: 8, lightAction: 'off' } };
+            req = { body };
             lightsHelper.lightGroupOnOff(req);
-          }, turnOffIn);
-        }
+
+            if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
+              serviceHelper.log('trace', 'Livingroom - processData', `Setting ${serviceHelper.getLightGroupName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
+              setTimeout(() => {
+                req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };
+                lightsHelper.lightGroupOnOff(req);
+              }, turnOffIn);
+            }
+          }
+        });
       }
     }
   } catch (err) {
     serviceHelper.log('error', 'Livingroom - processData', err);
   }
+  return true;
 };
