@@ -114,9 +114,9 @@ exports.processData = async (sensor) => {
               lightsHelper.lightGroupOnOff(req);
 
               if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-                serviceHelper.log('trace', 'Fronthall - processData', `Setting ${serviceHelper.getLightGroupName(8)} lights timer to turn off in 3 minutes`);
+                serviceHelper.log('trace', 'Fronthall - processData', `Setting ${serviceHelper.getLightGroupName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
                 setTimeout(() => {
-                  req = { body: { lightGroupNumber: 7, lightAction: 'off' } };
+                  req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };
                   lightsHelper.lightGroupOnOff(req);
                 }, turnOffIn);
               }
