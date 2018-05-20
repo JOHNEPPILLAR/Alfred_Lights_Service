@@ -4,7 +4,6 @@
 const Skills = require('restify-router').Router;
 const serviceHelper = require('../../lib/helper.js');
 const hueBridge = require('huejay');
-// const _ = require('underscore');
 
 const skill = new Skills();
 
