@@ -19,7 +19,7 @@ async function checkOffTimerIsActive(timerID) {
     serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
     results = await dbClient.query(SQL);
     serviceHelper.log('trace', 'Middlehall - processData', 'Release the data store connection back to the pool');
-    dbClient.release(); // Return data store connection back to pool
+    await dbClient.release(); // Return data store connection back to pool
 
     if (results.rowCount === 0) active = false;
     return active;
@@ -69,7 +69,7 @@ exports.processData = async (sensor) => {
           serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
           results = await dbClient.query(SQL);
           serviceHelper.log('trace', 'Middlehall - processData', 'Release the data store connection back to the pool');
-          dbClient.release(); // Return data store connection back to pool
+          await dbClient.release(); // Return data store connection back to pool
 
           if (results.rowCount === 0) {
             serviceHelper.log('trace', 'Middlehall - processData', 'No active light sensor settings');
