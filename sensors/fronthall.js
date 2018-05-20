@@ -13,7 +13,7 @@ async function checkOffTimerIsActive(timerID) {
   try {
     const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
     serviceHelper.log('trace', 'Fronthall - checkOffTimerIsActive', 'Connect to data store connection pool');
-    dbClient = await global.logDataClient.connect(); // Connect to data store
+    dbClient = await global.schedulesDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Fronthall - checkOffTimerIsActive', 'Get list of active services');
     results = await dbClient.query(SQL);
     serviceHelper.log('trace', 'Fronthall - checkOffTimerIsActive', 'Release the data store connection back to the pool');
@@ -63,7 +63,7 @@ exports.processData = async (sensor) => {
         try {
           const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turnOff FROM sensor_settings WHERE active AND sensor_id = 1';
           serviceHelper.log('trace', 'Fronthall - processData', 'Connect to data store connection pool');
-          dbClient = await global.logDataClient.connect(); // Connect to data store
+          dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Fronthall - processData', 'Get list of active services');
           results = await dbClient.query(SQL);
           serviceHelper.log('trace', 'Fronthall - processData', 'Release the data store connection back to the pool');

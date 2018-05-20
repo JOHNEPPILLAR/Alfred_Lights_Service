@@ -14,7 +14,7 @@ async function checkOffTimerIsActive(timerID) {
   try {
     const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
     serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', 'Connect to data store connection pool');
-    dbClient = await global.logDataClient.connect(); // Connect to data store
+    dbClient = await global.schedulesDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', 'Get list of active services');
     results = await dbClient.query(SQL);
     serviceHelper.log('trace', 'Livingroom - checkOffTimerIsActive', 'Release the data store connection back to the pool');
