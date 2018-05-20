@@ -117,7 +117,7 @@ exports.processData = async (sensor) => {
               if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
                 serviceHelper.log('trace', 'Middlehall - processData', `Setting ${serviceHelper.getLightName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
                 setTimeout(() => {
-                  req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };
+                  req = { body: { lightNumber: lightInfo.light_group_number, lightAction: 'off' } };
                   lightsHelper.lightOnOff(req);
                 }, turnOffIn);
               }
