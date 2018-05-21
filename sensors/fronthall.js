@@ -105,7 +105,7 @@ exports.processData = async (sensor) => {
                   try {
                     turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
                   } catch (err) {
-                    serviceHelper.log('errir', 'Fronthall - processData', err);
+                    serviceHelper.log('error', 'Fronthall - processData', err);
                   }
               }
 
@@ -123,7 +123,7 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('errir', 'Fronthall - processData', err);
+          serviceHelper.log('error', 'Fronthall - processData', err);
         }
       }
     }

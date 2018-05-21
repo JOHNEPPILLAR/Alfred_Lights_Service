@@ -123,7 +123,7 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('errir', 'Livingroom - processData', err);
+          serviceHelper.log('error', 'Livingroom - processData', err);
         }
       }
     }
