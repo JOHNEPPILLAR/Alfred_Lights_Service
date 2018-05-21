@@ -61,7 +61,7 @@ exports.processData = async (sensor) => {
         let dbClient;
 
         try {
-          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turnOff FROM sensor_settings WHERE active AND sensor_id = 1';
+          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off FROM sensor_settings WHERE active AND sensor_id = 1';
           serviceHelper.log('trace', 'Fronthall - processData', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Fronthall - processData', 'Get list of active services');
@@ -82,7 +82,6 @@ exports.processData = async (sensor) => {
           results.rows.forEach(async (lightInfo) => {
             if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
               serviceHelper.log('trace', 'Fronthall - processData', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
-
               serviceHelper.log('trace', 'Fronthall - processData', 'Construct the api call');
               body = {
                 lightGroupNumber: lightInfo.light_group_number,
