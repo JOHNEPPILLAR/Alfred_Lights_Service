@@ -260,7 +260,7 @@ async function lightGroupOnOff(req, res, next) {
   serviceHelper.log('trace', 'lightGroupOnOff', JSON.stringify(req.body));
 
   const {
-    lightGroupNumber, lightAction, brightness, x, y, ct,
+    lightGroupNumber, lightAction, brightness, x, y, ct, colorLoop,
   } = req.body;
 
   let returnState;
@@ -282,6 +282,9 @@ async function lightGroupOnOff(req, res, next) {
       }
       if (typeof ct !== 'undefined' && ct != null) {
         light.ct = ct;
+      }
+      if (typeof colorLoop !== 'undefined' && colorLoop != null) {
+        light.effect = 'colorloop';
       }
     }
 
