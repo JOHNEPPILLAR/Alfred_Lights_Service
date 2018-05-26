@@ -403,7 +403,7 @@ async function lightMotion(req, res, next) {
   }
   return true;
 }
-skill.put('/lightmotion', lightMotion);
+skill.get('/lightmotion', lightMotion);
 
 /**
  * @api {get} /lights/lightstate Get the state of a light
