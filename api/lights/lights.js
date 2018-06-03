@@ -77,8 +77,27 @@ skill.get('/listlights', listLights);
  */
 async function listLightGroups(req, res, next) {
   serviceHelper.log('trace', 'listLightGroups', 'listLightGroups API called');
+
+  // Mock
+  if (process.env.Mock === 'true') {
+    serviceHelper.log('trace', 'listLightGroups', 'Mock mode enabled');
+    let returnJSON = require('../../mock/listLightGroups.json');
+    serviceHelper.log('trace', 'listLightGroups', 'Remove dimmers etc from data');
+    returnJSON = returnJSON.filter(o => (o.attributes.attributes.class !== undefined));
+    serviceHelper.log('trace', 'listLightGroups', 'Return Mock');
+    if (typeof res !== 'undefined' && res !== null) {
+      serviceHelper.sendResponse(res, true, returnJSON);
+      next();
+    }
+    return returnJSON;
+  }
+
+  // Non mock
   try {
-    const lights = await hue.groups.getAll();
+    serviceHelper.log('trace', 'listLightGroups', 'Get data from HUE bridge');
+    let lights = await hue.groups.getAll();
+    serviceHelper.log('trace', 'listLightGroups', 'Remove dimmers etc from data');
+    lights = lights.filter(o => (o.attributes.attributes.class !== 'undefined'));
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, lights);
       next();
@@ -88,7 +107,7 @@ async function listLightGroups(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'listLightGroups', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -133,7 +152,7 @@ async function allOff(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'allOff', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, 'There was a problem turning off all the lights.');
+      serviceHelper.sendResponse(res, false, 'There was a problem turning off all the lights.');
     } else {
       return err;
     }
@@ -219,7 +238,7 @@ async function lightOnOff(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightOnOff', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -309,7 +328,7 @@ async function lightGroupOnOff(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightGroupOnOff', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -352,7 +371,7 @@ async function sensor(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'sensor', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err); // Send response back to caller
+      serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();
     } else {
       return err;
@@ -384,7 +403,21 @@ skill.put('/sensor', sensor);
 async function lightMotion(req, res, next) {
   try {
     serviceHelper.log('trace', 'lightMotion', 'lightMotion API called');
+
+    if (process.env.Mock === 'true') {
+      serviceHelper.log('trace', 'getSensorData', 'Mock mode enabled');
+      const returnJSON = require('../../mock/lightMotion.json');
+      serviceHelper.log('trace', 'getSensorData', 'Return Mock');
+      if (typeof res !== 'undefined' && res !== null) {
+        serviceHelper.sendResponse(res, true, returnJSON);
+        next();
+      } else {
+        return returnJSON;
+      }
+    }
+
     let sensorData = await hue.sensors.getAll();
+    serviceHelper.log('trace', 'lightMotion', 'Filter and only allow ZLLPresence and ZLLLightLevel in data');
     sensorData = sensorData.filter(o => (o.type === 'ZLLPresence' || o.type === 'ZLLLightLevel'));
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, sensorData);
@@ -395,7 +428,7 @@ async function lightMotion(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'sensor', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -443,7 +476,7 @@ async function lightState(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightstate', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -491,7 +524,7 @@ async function lightGroupState(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightGroupState', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -534,7 +567,7 @@ async function scenes(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'scenes', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, false, err);
       next();
     } else {
       return err;
@@ -596,7 +629,7 @@ async function lightBrightness(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightBrightness', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err); // Send response back to caller
+      serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();
     } else {
       return err;
@@ -658,7 +691,7 @@ async function lightGroupBrightness(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', 'lightGroupBrightness', err);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err); // Send response back to caller
+      serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();
     } else {
       return err;

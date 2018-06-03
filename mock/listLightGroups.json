@@ -1,0 +1,402 @@
+[
+    {
+        "attributes": {
+            "attributes": {
+                "type": "LightGroup",
+                "lights": [
+                    "2",
+                    "3"
+                ],
+                "id": "1",
+                "name": "Living Room"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 64,
+                "colormode": "xy",
+                "hue": 33016,
+                "sat": 53,
+                "xy": [
+                    0.3689,
+                    0.3719
+                ],
+                "ct": 230,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "LightGroup",
+                "lights": [
+                    "3",
+                    "2",
+                    "5"
+                ],
+                "id": "2",
+                "name": "Dimmer 2"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 254,
+                "colormode": "hs",
+                "hue": 33016,
+                "sat": 53,
+                "xy": [
+                    0.3689,
+                    0.3719
+                ],
+                "ct": 230,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "LightGroup",
+                "lights": [
+                    "4"
+                ],
+                "id": "3",
+                "name": "Dimmer 3"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 9,
+                "alert": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "19"
+                ],
+                "id": "4",
+                "name": "Kids room",
+                "class": "Kids bedroom"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": true,
+                "all_on": true
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": true,
+                "bri": 150,
+                "colormode": "hs",
+                "hue": 22731,
+                "sat": 254,
+                "xy": [
+                    0.2284,
+                    0.6566
+                ],
+                "ct": 153,
+                "alert": "none",
+                "effect": "colorloop"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "4",
+                    "6"
+                ],
+                "id": "5",
+                "name": "Bedroom",
+                "class": "Bedroom"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 8,
+                "alert": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "1"
+                ],
+                "id": "6",
+                "name": "Middle Hallway",
+                "class": "Hallway"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 60,
+                "colormode": "ct",
+                "hue": 14988,
+                "sat": 141,
+                "xy": [
+                    0.4575,
+                    0.4101
+                ],
+                "ct": 366,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "13",
+                    "14",
+                    "17",
+                    "18"
+                ],
+                "id": "7",
+                "name": "Downstairs Hall",
+                "class": "Hallway"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 60,
+                "colormode": "ct",
+                "ct": 366,
+                "alert": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "2",
+                    "12",
+                    "3"
+                ],
+                "id": "8",
+                "name": "Living Area",
+                "class": "Living room"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 64,
+                "colormode": "xy",
+                "hue": 33016,
+                "sat": 53,
+                "xy": [
+                    0.3689,
+                    0.3719
+                ],
+                "ct": 230,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "5",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11"
+                ],
+                "id": "9",
+                "name": "Kitchen",
+                "class": "Kitchen"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 254,
+                "colormode": "xy",
+                "hue": 39392,
+                "sat": 13,
+                "xy": [
+                    0.3691,
+                    0.3719
+                ],
+                "ct": 230,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "Room",
+                "lights": [
+                    "15",
+                    "16",
+                    "20",
+                    "21"
+                ],
+                "id": "10",
+                "name": "Hall Landing",
+                "class": "Hallway"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 254,
+                "alert": "none"
+            },
+            "changed": {}
+        }
+    },
+    {
+        "attributes": {
+            "attributes": {
+                "type": "LightGroup",
+                "lights": [
+                    "1",
+                    "2",
+                    "3",
+                    "12"
+                ],
+                "id": "11",
+                "name": "Group for wakeup"
+            },
+            "changed": {}
+        },
+        "state": {
+            "attributes": {
+                "any_on": false,
+                "all_on": false
+            },
+            "changed": {}
+        },
+        "action": {
+            "attributes": {
+                "on": false,
+                "bri": 64,
+                "colormode": "hs",
+                "hue": 33016,
+                "sat": 53,
+                "xy": [
+                    0.3689,
+                    0.3719
+                ],
+                "ct": 230,
+                "alert": "none",
+                "effect": "none"
+            },
+            "changed": {}
+        }
+    }
+]
