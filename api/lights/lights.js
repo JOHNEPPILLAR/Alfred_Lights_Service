@@ -97,7 +97,7 @@ async function listLightGroups(req, res, next) {
     serviceHelper.log('trace', 'listLightGroups', 'Get data from HUE bridge');
     let lights = await hue.groups.getAll();
     serviceHelper.log('trace', 'listLightGroups', 'Remove dimmers etc from data');
-    lights = lights.filter(o => (o.attributes.attributes.class !== 'undefined'));
+    lights = lights.filter(o => (o.attributes.attributes.type === 'Room'));
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, lights);
       next();

@@ -14,23 +14,23 @@
         },
         "state": {
             "attributes": {
-                "any_on": false,
-                "all_on": false
+                "any_on": true,
+                "all_on": true
             },
             "changed": {}
         },
         "action": {
             "attributes": {
-                "on": false,
-                "bri": 64,
-                "colormode": "xy",
-                "hue": 33016,
-                "sat": 53,
+                "on": true,
+                "bri": 51,
+                "colormode": "ct",
+                "hue": 14988,
+                "sat": 141,
                 "xy": [
-                    0.3689,
-                    0.3719
+                    0.4575,
+                    0.4101
                 ],
-                "ct": 230,
+                "ct": 366,
                 "alert": "none",
                 "effect": "none"
             },
@@ -53,7 +53,7 @@
         },
         "state": {
             "attributes": {
-                "any_on": false,
+                "any_on": true,
                 "all_on": false
             },
             "changed": {}
@@ -98,7 +98,7 @@
         "action": {
             "attributes": {
                 "on": false,
-                "bri": 9,
+                "bri": 254,
                 "alert": "none"
             },
             "changed": {}
@@ -129,13 +129,13 @@
                 "on": true,
                 "bri": 150,
                 "colormode": "hs",
-                "hue": 22731,
+                "hue": 57986,
                 "sat": 254,
                 "xy": [
-                    0.2284,
-                    0.6566
+                    0.471,
+                    0.2015
                 ],
-                "ct": 153,
+                "ct": 389,
                 "alert": "none",
                 "effect": "colorloop"
             },
@@ -166,7 +166,7 @@
         "action": {
             "attributes": {
                 "on": false,
-                "bri": 8,
+                "bri": 254,
                 "alert": "none"
             },
             "changed": {}
@@ -187,15 +187,15 @@
         },
         "state": {
             "attributes": {
-                "any_on": false,
-                "all_on": false
+                "any_on": true,
+                "all_on": true
             },
             "changed": {}
         },
         "action": {
             "attributes": {
-                "on": false,
-                "bri": 60,
+                "on": true,
+                "bri": 128,
                 "colormode": "ct",
                 "hue": 14988,
                 "sat": 141,
@@ -261,23 +261,23 @@
         },
         "state": {
             "attributes": {
-                "any_on": false,
-                "all_on": false
+                "any_on": true,
+                "all_on": true
             },
             "changed": {}
         },
         "action": {
             "attributes": {
-                "on": false,
-                "bri": 64,
-                "colormode": "xy",
-                "hue": 33016,
-                "sat": 53,
+                "on": true,
+                "bri": 51,
+                "colormode": "ct",
+                "hue": 14988,
+                "sat": 141,
                 "xy": [
-                    0.3689,
-                    0.3719
+                    0.4575,
+                    0.4101
                 ],
-                "ct": 230,
+                "ct": 366,
                 "alert": "none",
                 "effect": "none"
             },
@@ -376,23 +376,23 @@
         },
         "state": {
             "attributes": {
-                "any_on": false,
-                "all_on": false
+                "any_on": true,
+                "all_on": true
             },
             "changed": {}
         },
         "action": {
             "attributes": {
-                "on": false,
-                "bri": 64,
+                "on": true,
+                "bri": 51,
                 "colormode": "hs",
-                "hue": 33016,
-                "sat": 53,
+                "hue": 14988,
+                "sat": 141,
                 "xy": [
-                    0.3689,
-                    0.3719
+                    0.4575,
+                    0.4101
                 ],
-                "ct": 230,
+                "ct": 366,
                 "alert": "none",
                 "effect": "none"
             },
