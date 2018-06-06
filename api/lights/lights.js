@@ -4,9 +4,10 @@
 const Skills = require('restify-router').Router;
 const serviceHelper = require('../../lib/helper.js');
 const hueBridge = require('huejay');
+const listLightGroupsMock = require('../../mock/listLightGroups.json');
+const lightMotionMock = require('../../mock/lightMotion.json');
 
 const skill = new Skills();
-
 const { HueBridgeIP, HueBridgeUser } = process.env;
 const hue = new hueBridge.Client({
   host: HueBridgeIP,
@@ -81,7 +82,7 @@ async function listLightGroups(req, res, next) {
   // Mock
   if (process.env.Mock === 'true') {
     serviceHelper.log('trace', 'listLightGroups', 'Mock mode enabled');
-    let returnJSON = require('../../mock/listLightGroups.json');
+    let returnJSON = listLightGroupsMock;
     serviceHelper.log('trace', 'listLightGroups', 'Remove dimmers etc from data');
     returnJSON = returnJSON.filter(o => (o.attributes.attributes.class !== undefined));
     serviceHelper.log('trace', 'listLightGroups', 'Return Mock');
@@ -406,7 +407,7 @@ async function lightMotion(req, res, next) {
 
     if (process.env.Mock === 'true') {
       serviceHelper.log('trace', 'getSensorData', 'Mock mode enabled');
-      const returnJSON = require('../../mock/lightMotion.json');
+      const returnJSON = lightMotionMock;
       serviceHelper.log('trace', 'getSensorData', 'Return Mock');
       if (typeof res !== 'undefined' && res !== null) {
         serviceHelper.sendResponse(res, true, returnJSON);
