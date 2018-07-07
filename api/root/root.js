@@ -14,7 +14,7 @@ const skill = new Skills();
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
  *   {
- *     sucess: 'true'
+ *     success: 'true'
  *     data: 'pong'
  *   }
  *
@@ -49,9 +49,9 @@ skill.get('/ping', ping);
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
  *   {
- *     sucess: 'true'
+ *     success: 'true'
  *     data: {
- *       sucess or filure return message
+ *       success or filure return message
  *     }
  *   }
  *
