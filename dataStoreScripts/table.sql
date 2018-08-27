@@ -6,7 +6,7 @@ CREATE TABLE sensor_settings (
   light_group_number  INT                NOT NULL,
   light_action        TEXT               NOT NULL,
   brightness          INT                NOT NULL,
-  ct                  INT                NULL,  
+  scene               TEXT               NULL,  
   turn_off            TEXT               NOT NULL DEFAULT 'TRUE',
   active              BOOLEAN            NOT NULL DEFAULT TRUE
 )

@@ -1,9 +1,9 @@
 /**
  * Import external libraries
  */
+const hueBridge = require('huejay');
 const Skills = require('restify-router').Router;
 const serviceHelper = require('../../lib/helper.js');
-const hueBridge = require('huejay');
 const listLightGroupsMock = require('../../mock/listLightGroups.json');
 const lightMotionMock = require('../../mock/lightMotion.json');
 
@@ -170,9 +170,8 @@ skill.get('/alloff', allOff);
  * @apiParam {Number} lightNumber Hue bridge light number
  * @apiParam {String} lightAction [ on, off ]
  * @apiParam {Number} brightness Brighness [ 0..255 ]
- * @apiParam {Number} x Hue xy color [ 0..1 ]
- * @apiParam {Number} y Hue xy color [ 0..1 ]
- * @apiParam {Number} ct Hue ct color [153..500 ]
+ * @apiParam {String} scene [ D-lhO-Ne8O0yQrD ]
+ * @apiParam {String} colorLoop [ true, false ]
  *
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
@@ -191,9 +190,8 @@ skill.get('/alloff', allOff);
 async function lightOnOff(req, res, next) {
   serviceHelper.log('trace', 'lightOnOff', 'lightOnOff API called');
   serviceHelper.log('trace', 'lightOnOff', JSON.stringify(req.body));
-
   const {
-    lightNumber, lightAction, brightness, x, y, ct,
+    lightNumber, lightAction, brightness, scene, colorLoop,
   } = req.body;
 
   let returnState;
@@ -209,12 +207,11 @@ async function lightOnOff(req, res, next) {
       if (typeof brightness !== 'undefined' && brightness != null) {
         light.brightness = brightness;
       }
-      if ((typeof x !== 'undefined' && x != null) &&
-          (typeof y !== 'undefined' && y != null)) {
-        light.xy = [x, y];
+      if (typeof scene !== 'undefined' && scene != null) {
+        light.scene = scene;
       }
-      if (typeof ct !== 'undefined' && ct != null) {
-        light.ct = ct;
+      if (colorLoop === 'true') {
+        light.effect = 'colorloop';
       }
     }
 
@@ -257,9 +254,8 @@ skill.put('/lightonoff', lightOnOff);
  * @apiParam {Number} lightGroupNumber Hue bridge light group number
  * @apiParam {String} lightAction [ on, off ]
  * @apiParam {Number} brightness Brighness [ 0..255 ]
- * @apiParam {Number} x Hue xy color [ 0..1 ]
- * @apiParam {Number} y Hue xy color [ 0..1 ]
- * @apiParam {Number} ct Hue ct color [153..500 ]
+ * @apiParam {String} scene [ D-lhO-Ne8O0yQrD ]
+ * @apiParam {String} colorLoop [ true, false ]
  *
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
@@ -280,7 +276,7 @@ async function lightGroupOnOff(req, res, next) {
   serviceHelper.log('trace', 'lightGroupOnOff', JSON.stringify(req.body));
 
   const {
-    lightGroupNumber, lightAction, brightness, x, y, ct, colorLoop,
+    lightGroupNumber, lightAction, brightness, scene, colorLoop,
   } = req.body;
 
   let returnState;
@@ -296,14 +292,10 @@ async function lightGroupOnOff(req, res, next) {
       if (typeof brightness !== 'undefined' && brightness != null) {
         light.brightness = brightness;
       }
-      if ((typeof x !== 'undefined' && x != null) &&
-          (typeof y !== 'undefined' && y != null)) {
-        light.xy = [x, y];
+      if (typeof scene !== 'undefined' && scene != null) {
+        light.scene = scene;
       }
-      if (typeof ct !== 'undefined' && ct != null) {
-        light.ct = ct;
-      }
-      if (typeof colorLoop !== 'undefined' && colorLoop != null) {
+      if (colorLoop === 'true') {
         light.effect = 'colorloop';
       }
     }
@@ -311,6 +303,7 @@ async function lightGroupOnOff(req, res, next) {
     // Save light group state
     serviceHelper.log('trace', 'lightGroupOnOff', `Saving light group ${serviceHelper.getLightGroupName(lightGroupNumber)} state`);
     const saved = await hue.groups.save(light);
+
     if (saved) {
       returnState = true;
       returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`;
@@ -558,9 +551,10 @@ async function scenes(req, res, next) {
   try {
     serviceHelper.log('trace', 'scenes', 'scenes API called');
     const lights = await hue.scenes.getAll();
+    const returnData = lights.filter(o => (o.attributes.attributes.owner.toString() === '9FLuZJvC-N6WNxKvlFVOiEHEMVUPv9bS0Yx-woRL'));
 
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, lights);
+      serviceHelper.sendResponse(res, true, returnData);
       next();
     } else {
       return lights;

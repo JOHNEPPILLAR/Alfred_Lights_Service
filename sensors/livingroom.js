@@ -1,8 +1,8 @@
 /**
  * Import external libraries
  */
-const serviceHelper = require('../lib/helper.js');
 const dateFormat = require('dateformat');
+const serviceHelper = require('../lib/helper.js');
 const lightsHelper = require('../api/lights/lights.js');
 
 async function checkOffTimerIsActive(timerID) {
@@ -62,7 +62,7 @@ exports.processData = async (sensor) => {
         let results;
 
         try {
-          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, ct FROM sensor_settings WHERE active AND sensor_id = 2';
+          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 2';
           serviceHelper.log('trace', 'Livingroom - processData', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Livingroom - processData', 'Get list of active services');
@@ -89,9 +89,9 @@ exports.processData = async (sensor) => {
                 lightGroupNumber: lightInfo.light_group_number,
                 lightAction: lightInfo.light_action,
                 brightness: lightInfo.brightness,
+                scene: lightInfo.scene,
               };
 
-              if (lightInfo.ct != null) body.ct = lightInfo.ct;
               serviceHelper.log('trace', 'Livingroom - processData', JSON.stringify(body));
 
               serviceHelper.log('trace', 'Livingroom - processData', 'Figure out if lights require turning off');
