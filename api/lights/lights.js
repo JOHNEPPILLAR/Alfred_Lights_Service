@@ -295,7 +295,7 @@ async function lightGroupOnOff(req, res, next) {
       if (typeof scene !== 'undefined' && scene != null) {
         light.scene = scene;
       }
-      if (colorLoop === 'true') {
+      if (colorLoop) {
         light.effect = 'colorloop';
       }
     }
