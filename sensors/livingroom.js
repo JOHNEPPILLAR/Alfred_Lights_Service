@@ -21,6 +21,7 @@ async function checkOffTimerIsActive(timerID) {
     await dbClient.release(); // Return data store connection back to pool
 
     if (results.rowCount === 0) active = false;
+
     return active;
   } catch (err) {
     serviceHelper.log('error', 'Livingroom - checkOffTimerIsActive', err);
@@ -57,7 +58,7 @@ exports.processData = async (sensor) => {
 
       if (!lightstate.any_on) {
         let body;
-        let turnOffLightTimer = false;
+        let lightsOffScheduleActive = false;
         let dbClient;
         let results;
 
@@ -91,29 +92,25 @@ exports.processData = async (sensor) => {
                 brightness: lightInfo.brightness,
                 scene: lightInfo.scene,
               };
-
               serviceHelper.log('trace', 'Livingroom - processData', JSON.stringify(body));
 
               serviceHelper.log('trace', 'Livingroom - processData', 'Figure out if lights require turning off');
               switch (lightInfo.turn_off) {
                 case 'TRUE':
-                  turnOffLightTimer = true;
+                  lightsOffScheduleActive = false;
                   break;
                 case 'FALSE':
-                  turnOffLightTimer = false;
+                  lightsOffScheduleActive = true;
                   break;
                 default:
-                  try {
-                    turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
-                  } catch (err) {
-                    serviceHelper.log('errir', 'Livingroom - processData', err);
-                  }
+                  lightsOffScheduleActive = await checkOffTimerIsActive(lightInfo.turn_off);
               }
+              serviceHelper.log('trace', 'Livingroom - processData', `Turn off lights: ${lightsOffScheduleActive}`);
 
               req = { body };
               lightsHelper.lightGroupOnOff(req);
 
-              if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
+              if (lightsOffScheduleActive) { // Schedule to turn off lights after 3 minutes
                 serviceHelper.log('trace', 'Livingroom - processData', `Setting ${serviceHelper.getLightGroupName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
                 setTimeout(() => {
                   req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };
