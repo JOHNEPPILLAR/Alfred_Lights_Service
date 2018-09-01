@@ -46,7 +46,8 @@ exports.processData = async (sensor) => {
         if (sensorItem.state.attributes.attributes.presence) motion = true;
       }
       if (sensorItem.attributes.attributes.id === '20') { // Ambient light sensor
-        if (sensorItem.state.attributes.attributes.lightlevel <= sensorItem.config.attributes.attributes.tholddark) lowLight = true;
+        if (sensorItem.state.attributes.attributes.lightlevel
+          <= sensorItem.config.attributes.attributes.tholddark) lowLight = true;
       }
     });
 
@@ -105,12 +106,12 @@ exports.processData = async (sensor) => {
                 default:
                   lightsOffScheduleActive = await checkOffTimerIsActive(lightInfo.turn_off);
               }
-              serviceHelper.log('trace', 'Livingroom - processData', `Turn off lights: ${lightsOffScheduleActive}`);
+              serviceHelper.log('trace', 'Livingroom - processData', `Lights off scheduler active: ${lightsOffScheduleActive}`);
 
               req = { body };
               lightsHelper.lightGroupOnOff(req);
 
-              if (lightsOffScheduleActive) { // Schedule to turn off lights after 3 minutes
+              if (!lightsOffScheduleActive) { // Schedule to turn off lights after 3 minutes
                 serviceHelper.log('trace', 'Livingroom - processData', `Setting ${serviceHelper.getLightGroupName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
                 setTimeout(() => {
                   req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };

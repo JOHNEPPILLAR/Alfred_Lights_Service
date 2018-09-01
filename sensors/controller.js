@@ -14,8 +14,8 @@ let timer = 3000;
 // Process sensor data
 async function processSensorData(apiData) {
   livingRoomSensor.processData(apiData); // Living room sensor
-  frontHallSensor.processData(apiData); // Front hall sensor
-  middleHallSensor.processData(apiData); // Middle hall sensor
+  //frontHallSensor.processData(apiData); // Front hall sensor
+  //middleHallSensor.processData(apiData); // Middle hall sensor
 }
 
 // Get sensor data
