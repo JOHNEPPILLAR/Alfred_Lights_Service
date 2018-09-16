@@ -143,7 +143,7 @@ async function allOff(req, res, next) {
     const lights = await hue.groups.getById(0);
     lights.on = false;
     hue.groups.save(lights);
-    serviceHelper.log('trace', 'allOff', 'Turned off all lights.');
+    serviceHelper.log('info', 'allOff', 'Turned off all lights.');
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, 'Turned off all lights.');
       next();
@@ -221,7 +221,7 @@ async function lightOnOff(req, res, next) {
     if (saved) {
       returnState = true;
       returnMessage = `Light ${serviceHelper.getLightName(lightNumber)} was turned ${lightAction}.`;
-      serviceHelper.log('trace', 'lightOnOff', `Light ${serviceHelper.getLightName(lightNumber)} was turned ${lightAction}.`);
+      serviceHelper.log('info', 'lightOnOff', `Light ${serviceHelper.getLightName(lightNumber)} was turned ${lightAction}.`);
     } else {
       returnState = false;
       returnMessage = `There was an error turning light ${serviceHelper.getLightName(lightNumber)} ${lightAction}.`;
@@ -307,7 +307,7 @@ async function lightGroupOnOff(req, res, next) {
     if (saved) {
       returnState = true;
       returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`;
-      serviceHelper.log('trace', 'lightGroupOnOff', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`);
+      serviceHelper.log('info', 'lightGroupOnOff', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`);
     } else {
       returnState = false;
       returnMessage = `There was an error turning light group ${serviceHelper.getLightGroupName(lightGroupNumber)} ${lightAction}.`;
@@ -603,17 +603,17 @@ async function lightBrightness(req, res, next) {
     serviceHelper.log('trace', 'lightBrightness', JSON.stringify(req.body));
 
     const { lightNumber, brightness } = req.body;
-    const lights = await hue.groups.getById(lightNumber);
+    const lights = await hue.getById(lightNumber);
     lights.brightness = brightness;
-    const saved = await hue.groups.save(lights);
+    const saved = await hue.save(lights);
     if (saved) {
       returnState = true;
-      returnMessage = `Light group ${serviceHelper.getLightGroupName(lightNumber)} brightness was set to ${brightness}.`;
-      serviceHelper.log('trace', 'lightBrightness', `Light group ${serviceHelper.getLightGroupName(lightNumber)} brightness was set to ${brightness}.`);
+      returnMessage = `Light ${serviceHelper.getLightName(lightNumber)} brightness was set to ${brightness}.`;
+      serviceHelper.log('info', 'lightBrightness', `Light ${serviceHelper.getLightName(lightNumber)} brightness was set to ${brightness}.`);
     } else {
       returnState = false;
-      returnMessage = `There was an error updating light group ${lightNumber} brighness to ${brightness}.`;
-      serviceHelper.log('error', 'lightBrightness', `There was an error updating light group ${lightNumber} brighness to ${brightness}.`);
+      returnMessage = `There was an error updating light ${serviceHelper.getLightName(lightNumber)} brighness to ${brightness}.`;
+      serviceHelper.log('error', 'lightBrightness', `There was an error updating light ${serviceHelper.getLightName(lightNumber)} brighness to ${brightness}.`);
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);
@@ -671,11 +671,11 @@ async function lightGroupBrightness(req, res, next) {
     if (saved) {
       returnState = true;
       returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`;
-      serviceHelper.log('trace', 'lightGroupBrightness', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`);
+      serviceHelper.log('info', 'lightGroupBrightness', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`);
     } else {
       returnState = false;
-      returnMessage = `There was an error updating light group ${lightGroupNumber} brighness to ${brightness}.`;
-      serviceHelper.log('error', 'lightGroupBrightness', `There was an error updating light group ${lightGroupNumber} brighness to ${brightness}.`);
+      returnMessage = `There was an error updating light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brighness to ${brightness}.`;
+      serviceHelper.log('error', 'lightGroupBrightness', `There was an error updating light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brighness to ${brightness}.`);
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);
