@@ -292,9 +292,11 @@ async function lightGroupOnOff(req, res, next) {
       if (typeof brightness !== 'undefined' && brightness != null) {
         light.brightness = brightness;
       }
+
       if (typeof scene !== 'undefined' && scene != null) {
-        light.scene = scene;
+        light.xy = serviceHelper.lightSceneXY(scene);
       }
+      
       if (colorLoop) {
         light.effect = 'colorloop';
       }
