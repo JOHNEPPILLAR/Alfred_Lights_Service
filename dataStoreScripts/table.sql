@@ -1,12 +1,12 @@
-CREATE TABLE sensor_settings (
+CREATE TABLE sensorSettings (
   id                  SERIAL             PRIMARY KEY,
-  sensor_id           INT                NOT NULL,
-  start_time          TEXT               NOT NULL,
-  end_time            TEXT               NOT NULL,
-  light_group_number  INT                NOT NULL,
-  light_action        TEXT               NOT NULL,
+  sensorID           INT                NOT NULL,
+  startTime          TEXT               NOT NULL,
+  endTime            TEXT               NOT NULL,
+  lightGroupNumber  INT                NOT NULL,
+  lightAction        TEXT               NOT NULL,
   brightness          INT                NOT NULL,
   scene               INT                NULL,  
-  turn_off            TEXT               NOT NULL DEFAULT 'TRUE',
+  turnOff            TEXT               NOT NULL DEFAULT 'TRUE',
   active              BOOLEAN            NOT NULL DEFAULT TRUE
 )

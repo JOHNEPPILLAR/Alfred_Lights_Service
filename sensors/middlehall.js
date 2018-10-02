@@ -46,7 +46,10 @@ exports.processData = async (sensor) => {
         if (sensorItem.state.attributes.attributes.presence) motion = true;
       }
       if (sensorItem.attributes.attributes.id === '28') { // Ambient light sensor
-        if (sensorItem.state.attributes.attributes.lightlevel <= sensorItem.config.attributes.attributes.tholddark) lowLight = true;
+        if (sensorItem.state.attributes.attributes.lightlevel
+          <= sensorItem.config.attributes.attributes.tholddark) {
+          lowLight = true;
+        }
       }
     });
 
@@ -63,7 +66,7 @@ exports.processData = async (sensor) => {
         let dbClient;
 
         try {
-          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 3';
+          const SQL = 'SELECT startTime, endTime, lightGroupNumber, lightAction, brightness, turnOff, scene FROM sensorSettings WHERE active AND sensorID = 3';
           serviceHelper.log('trace', 'Middlehall - processData', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
