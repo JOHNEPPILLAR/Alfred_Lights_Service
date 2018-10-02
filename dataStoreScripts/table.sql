@@ -1,4 +1,4 @@
-CREATE TABLE sensorSettings (
+CREATE TABLE sensorsettings (
   id                  SERIAL             PRIMARY KEY,
   sensorID           INT                NOT NULL,
   startTime          TEXT               NOT NULL,

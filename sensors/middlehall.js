@@ -66,7 +66,7 @@ exports.processData = async (sensor) => {
         let dbClient;
 
         try {
-          const SQL = 'SELECT startTime, endTime, lightGroupNumber, lightAction, brightness, turnOff, scene FROM sensorSettings WHERE active AND sensorID = 3';
+          const SQL = 'SELECT startTime, endTime, lightGroupNumber, lightAction, brightness, turnOff, scene FROM sensorsettings WHERE active AND sensorID = 3';
           serviceHelper.log('trace', 'Middlehall - processData', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
