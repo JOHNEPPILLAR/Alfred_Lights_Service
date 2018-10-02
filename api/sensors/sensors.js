@@ -89,7 +89,7 @@ async function saveSensors(req, res, next) {
 
   try {
     // Update data in data store
-    const SQL = 'UPDATE sensorsettings SET startTime = $2, endTime = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
+    const SQL = 'UPDATE sensorsettings SET starttime = $2, endtime = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
     const SQLValues = [
       id,
       startTime,
