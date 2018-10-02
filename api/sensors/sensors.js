@@ -79,7 +79,48 @@ skill.get('/list', listSensors);
  *
  */
 async function saveSensors(req, res, next) {
-  serviceHelper.log('trace', 'saveSchedule', 'Save Schedule API called');
+  serviceHelper.log('trace', 'saveSensors', 'Save Schedule API called');
+
+  let dbClient;
+  let results;
+  const {
+    id, startTime, endTime, scene, brightness, active,
+  } = req.body;
+
+  try {
+    // Update data in data store
+    const SQL = 'UPDATE sensor_settings SET startTime = $2, endTime = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
+    const SQLValues = [
+      id,
+      startTime,
+      endTime,
+      scene,
+      brightness,
+      active,
+    ];
+
+    serviceHelper.log('trace', 'saveSensors', 'Connect to data store connection pool');
+    dbClient = await global.schedulesDataClient.connect(); // Connect to data store
+    serviceHelper.log('trace', 'saveSensors', 'Save sensor');
+    results = await dbClient.query(SQL, SQLValues);
+    serviceHelper.log('trace', 'saveSensors', 'Release the data store connection back to the pool');
+    await dbClient.release(); // Return data store connection back to pool
+
+    // Send data back to caler
+    if (results.rowCount === 1) {
+      serviceHelper.log('info', 'saveSensors', `Saved sensor data: ${JSON.stringify(req.body)}`);
+      serviceHelper.sendResponse(res, true, 'saved');
+    } else {
+      serviceHelper.log('error', 'saveSensors', 'Failed to save data');
+      serviceHelper.sendResponse(res, false, 'failed to save');
+    }
+    next();
+  } catch (err) {
+    serviceHelper.log('error', 'saveSensors', err);
+    serviceHelper.sendResponse(res, false, 'failed to save');
+    next();
+  }
+  return true;
 }
 skill.put('/save', saveSensors);
 
