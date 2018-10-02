@@ -100,7 +100,7 @@ async function saveSensors(req, res, next) {
     ];
 
     serviceHelper.log('trace', 'saveSensors', 'Connect to data store connection pool');
-    dbClient = await global.schedulesDataClient.connect(); // Connect to data store
+    dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'saveSensors', 'Save sensor');
     results = await dbClient.query(SQL, SQLValues);
     serviceHelper.log('trace', 'saveSensors', 'Release the data store connection back to the pool');
