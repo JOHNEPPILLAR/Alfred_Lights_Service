@@ -38,7 +38,7 @@ async function listSensors(req, res, next) {
 
   try {
     // Get data from data store
-    const SQL = 'SELECT * FROM sensorsettings ORDER BY id';
+    const SQL = 'SELECT * FROM sensor_settings ORDER BY id';
     serviceHelper.log('trace', 'listSensors', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'listSensors', 'Get sensors');
@@ -89,7 +89,7 @@ async function saveSensors(req, res, next) {
 
   try {
     // Update data in data store
-    const SQL = 'UPDATE sensorsettings SET startTime = $2, endTime = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
+    const SQL = 'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
     const SQLValues = [
       id,
       startTime,

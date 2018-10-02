@@ -64,7 +64,7 @@ exports.processData = async (sensor) => {
         let dbClient;
 
         try {
-          const SQL = 'SELECT startTime, endTime, lightGroupNumber, lightAction, brightness, turnOff, scene FROM sensorsettings WHERE active AND sensorID = 1';
+          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 1';
           serviceHelper.log('trace', 'Fronthall - processData', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Fronthall - processData', 'Get list of active services');
