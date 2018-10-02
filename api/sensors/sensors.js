@@ -84,7 +84,7 @@ async function saveSensors(req, res, next) {
   let dbClient;
   let results;
   const {
-    id, startTime, endTime, scene, brightness, active,
+    id, start_time, end_time, scene, brightness, active,
   } = req.body;
 
   try {
@@ -92,8 +92,8 @@ async function saveSensors(req, res, next) {
     const SQL = 'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
     const SQLValues = [
       id,
-      startTime,
-      endTime,
+      start_time,
+      end_time,
       scene,
       brightness,
       active,
