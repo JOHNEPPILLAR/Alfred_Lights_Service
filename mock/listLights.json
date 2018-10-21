@@ -1,0 +1,587 @@
+[
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "1",
+                    "name": "Middle hall light",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:10:55:1b:67-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LCT007",
+                    "swversion": "5.105.0.21536"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": false,
+                    "bri": 200,
+                    "colormode": "ct",
+                    "hue": 14988,
+                    "sat": 141,
+                    "xy": [
+                        0.4575,
+                        0.4101
+                    ],
+                    "ct": 366,
+                    "alert": "none",
+                    "effect": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "2",
+                    "name": "Living room light",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:10:55:1c:8d-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LCT007",
+                    "swversion": "5.105.0.21536"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "xy",
+                    "hue": 14957,
+                    "sat": 141,
+                    "xy": [
+                        0.4576,
+                        0.4099
+                    ],
+                    "ct": 366,
+                    "alert": "none",
+                    "effect": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "3",
+                    "name": "Play area light",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:10:55:1e:7a-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LCT007",
+                    "swversion": "5.105.0.21536"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "xy",
+                    "hue": 14957,
+                    "sat": 141,
+                    "xy": [
+                        0.4576,
+                        0.4099
+                    ],
+                    "ct": 366,
+                    "alert": "none",
+                    "effect": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "4",
+                    "name": "Bedroom top light",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:17:88:01:10:34:85:78-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LWB006",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 1,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "5",
+                    "name": "Kitchen side light",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:17:88:01:10:34:a3:89-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LWB006",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "6",
+                    "name": "Frans bedside light",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:17:88:01:10:34:53:cc-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LWB006",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 1,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "7",
+                    "name": "Kitchen spot 1",
+                    "type": "Color temperature light",
+                    "uniqueid": "00:17:88:01:02:23:94:6e-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LTW013",
+                    "productid": "Philips-LTW013-1-GU10CTv1",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "797DDD7C"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "ct",
+                    "ct": 230,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "8",
+                    "name": "Kitchen light 1",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:17:88:01:02:4a:20:7b-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LWB010",
+                    "productid": "Philips-LWB010-1-A19DLv3",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "C40F3F07"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "9",
+                    "name": "Kitchen spot 2",
+                    "type": "Color temperature light",
+                    "uniqueid": "00:17:88:01:02:23:94:d1-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LTW013",
+                    "productid": "Philips-LTW013-1-GU10CTv1",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "797DDD7C"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "ct",
+                    "ct": 230,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "10",
+                    "name": "Kitchen spot 3",
+                    "type": "Color temperature light",
+                    "uniqueid": "00:17:88:01:02:71:f3:14-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LTW013",
+                    "productid": "Philips-LTW013-1-GU10CTv1",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "797DDD7C"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "ct",
+                    "ct": 230,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "11",
+                    "name": "Kitchen lightstrip",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:01:20:f6:20-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LST002",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "xy",
+                    "hue": 39392,
+                    "sat": 13,
+                    "xy": [
+                        0.3691,
+                        0.3719
+                    ],
+                    "ct": 230,
+                    "alert": "none",
+                    "effect": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "12",
+                    "name": "Lounge corner light",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:17:88:01:02:49:7c:80-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LWB010",
+                    "productid": "Philips-LWB010-1-A19DLv3",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "C40F3F07"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "13",
+                    "name": "Downstairs hall light 1",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:7a:b4:44-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": false,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "14",
+                    "name": "Downstairs hall light 2",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:7c:4c:3c-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "15",
+                    "name": "Upstairs hall light 1",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:7c:b5:5e-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "16",
+                    "name": "Upstairs hall light 2",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:7c:e8:2c-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "17",
+                    "name": "Downstairs hall light 4",
+                    "type": "Color temperature light",
+                    "uniqueid": "00:17:88:01:02:27:f1:4b-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LTW013",
+                    "productid": "Philips-LTW013-1-GU10CTv1",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "797DDD7C"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "ct",
+                    "ct": 366,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "18",
+                    "name": "Downstairs hall light 3",
+                    "type": "Color temperature light",
+                    "uniqueid": "00:17:88:01:02:27:ef:cf-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LTW013",
+                    "productid": "Philips-LTW013-1-GU10CTv1",
+                    "swversion": "1.29.0_r21169",
+                    "swconfigid": "797DDD7C"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "ct",
+                    "ct": 366,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "19",
+                    "name": "Kids room",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:02:14:72:27-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LLC020",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 25,
+                    "colormode": "xy",
+                    "hue": 6291,
+                    "sat": 251,
+                    "xy": [
+                        0.5612,
+                        0.4042
+                    ],
+                    "ct": 500,
+                    "alert": "none",
+                    "effect": "colorloop"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "20",
+                    "name": "Upstairs hall light 3",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:80:ac:61-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "21",
+                    "name": "Upstairs hall light 4",
+                    "type": "Dimmable light",
+                    "uniqueid": "00:15:8d:00:01:80:a1:e7-01",
+                    "manufacturername": "innr",
+                    "modelid": "RS 125",
+                    "swversion": "2.1"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "alert": "none"
+                },
+                "changed": {}
+            }
+        },
+        {
+            "attributes": {
+                "attributes": {
+                    "id": "22",
+                    "name": "Living room up light",
+                    "type": "Extended color light",
+                    "uniqueid": "00:17:88:01:04:79:d0:ce-0b",
+                    "manufacturername": "Philips",
+                    "modelid": "LLC020",
+                    "swversion": "5.105.0.21169"
+                },
+                "changed": {}
+            },
+            "state": {
+                "attributes": {
+                    "on": false,
+                    "reachable": true,
+                    "bri": 254,
+                    "colormode": "xy",
+                    "hue": 8402,
+                    "sat": 140,
+                    "xy": [
+                        0.4575,
+                        0.4099
+                    ],
+                    "ct": 366,
+                    "alert": "none",
+                    "effect": "none"
+                },
+                "changed": {}
+            }
+        }
+    
+    ]

@@ -44,8 +44,12 @@ async function getSensorData() {
 // Setup timer function to run every x seconds
 function setup() {
   setTimeout(() => {
-    getSensorData(); // Get data from Hue hub and then process it
-    setup(); // Recursive call back to this function
+    if (process.env.Mock === 'true') {
+      serviceHelper.log('info', 'getSensorData', 'Mocking enabled. Will not process sensor data');
+    } else {
+      getSensorData(); // Get data from Hue hub and then process it
+      setup(); // Recursive call back to this function
+    }
   }, timer);
 }
 
