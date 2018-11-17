@@ -3,6 +3,10 @@
  */
 const hueBridge = require('huejay');
 const Skills = require('restify-router').Router;
+
+/**
+ * Import helper libraries
+ */
 const serviceHelper = require('../../lib/helper.js');
 const listLightGroupsMock = require('../../mock/listLightGroups.json');
 const listLightsMock = require('../../mock/listLights.json');
