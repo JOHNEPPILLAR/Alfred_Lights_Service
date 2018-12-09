@@ -64,7 +64,7 @@ async function listLights(req, res, next) {
       return lights;
     }
   } catch (err) {
-    serviceHelper.log('error', 'listLights', err);
+    serviceHelper.log('error', 'listLights', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, null, err);
       next();
@@ -125,7 +125,7 @@ async function listLightGroups(req, res, next) {
       return lights;
     }
   } catch (err) {
-    serviceHelper.log('error', 'listLightGroups', err);
+    serviceHelper.log('error', 'listLightGroups', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -170,7 +170,7 @@ async function allOff(req, res, next) {
       return true;
     }
   } catch (err) {
-    serviceHelper.log('error', 'allOff', err);
+    serviceHelper.log('error', 'allOff', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, 'There was a problem turning off all the lights.');
     } else {
@@ -253,7 +253,7 @@ async function lightOnOff(req, res, next) {
       return true;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightOnOff', err);
+    serviceHelper.log('error', 'lightOnOff', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -341,7 +341,7 @@ async function lightGroupOnOff(req, res, next) {
       return true;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightGroupOnOff', err);
+    serviceHelper.log('error', 'lightGroupOnOff', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -384,7 +384,7 @@ async function sensor(req, res, next) {
       return sensors;
     }
   } catch (err) {
-    serviceHelper.log('error', 'sensor', err);
+    serviceHelper.log('error', 'sensor', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();
@@ -441,7 +441,7 @@ async function lightMotion(req, res, next) {
       return sensorData;
     }
   } catch (err) {
-    serviceHelper.log('error', 'sensor', err);
+    serviceHelper.log('error', 'sensor', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -489,7 +489,7 @@ async function lightState(req, res, next) {
       return lights.state.attributes;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightstate', err);
+    serviceHelper.log('error', 'lightstate', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -537,7 +537,7 @@ async function lightGroupState(req, res, next) {
       return lights.state.attributes;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightGroupState', err);
+    serviceHelper.log('error', 'lightGroupState', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -581,7 +581,7 @@ async function scenes(req, res, next) {
       return lights;
     }
   } catch (err) {
-    serviceHelper.log('error', 'scenes', err);
+    serviceHelper.log('error', 'scenes', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err);
       next();
@@ -643,7 +643,7 @@ async function lightBrightness(req, res, next) {
       return returnMessage;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightBrightness', err);
+    serviceHelper.log('error', 'lightBrightness', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();
@@ -705,7 +705,7 @@ async function lightGroupBrightness(req, res, next) {
       return returnMessage;
     }
   } catch (err) {
-    serviceHelper.log('error', 'lightGroupBrightness', err);
+    serviceHelper.log('error', 'lightGroupBrightness', err.message);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, false, err); // Send response back to caller
       next();

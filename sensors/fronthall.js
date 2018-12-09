@@ -22,7 +22,7 @@ async function checkOffTimerIsActive(timerID) {
     if (results.rowCount === 0) active = false;
     return active;
   } catch (err) {
-    serviceHelper.log('error', 'Fronthall - checkOffTimerIsActive', err);
+    serviceHelper.log('error', 'Fronthall - checkOffTimerIsActive', err.message);
   }
   return active;
 }
@@ -124,12 +124,12 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('error', 'Fronthall - processData', err);
+          serviceHelper.log('error', 'Fronthall - processData', err.message);
         }
       }
     }
   } catch (err) {
-    serviceHelper.log('error', 'Fronthall - processData', err);
+    serviceHelper.log('error', 'Fronthall - processData', err.message);
   }
   return true;
 };

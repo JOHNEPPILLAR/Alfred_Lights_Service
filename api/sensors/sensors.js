@@ -54,7 +54,7 @@ async function listSensors(req, res, next) {
     serviceHelper.sendResponse(res, true, results);
     next();
   } catch (err) {
-    serviceHelper.log('error', 'listSensors', err);
+    serviceHelper.log('error', 'listSensors', err.message);
     serviceHelper.sendResponse(res, false, err);
     next();
   }
@@ -120,7 +120,7 @@ async function saveSensors(req, res, next) {
     }
     next();
   } catch (err) {
-    serviceHelper.log('error', 'saveSensors', err);
+    serviceHelper.log('error', 'saveSensors', err.message);
     serviceHelper.sendResponse(res, false, 'failed to save');
     next();
   }

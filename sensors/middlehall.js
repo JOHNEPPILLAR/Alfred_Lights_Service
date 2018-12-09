@@ -24,7 +24,7 @@ async function checkOffTimerIsActive(timerID) {
     if (results.rowCount === 0) active = false;
     return active;
   } catch (err) {
-    serviceHelper.log('error', 'Middlehall - processData', err);
+    serviceHelper.log('error', 'Middlehall - processData', err.message);
   }
   return active;
 }
@@ -110,7 +110,7 @@ exports.processData = async (sensor) => {
                   try {
                     turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
                   } catch (err) {
-                    serviceHelper.log('error', 'Middlehall - processData', err);
+                    serviceHelper.log('error', 'Middlehall - processData', err.message);
                   }
               }
 
@@ -127,12 +127,12 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('error', 'Middlehall - processData', err);
+          serviceHelper.log('error', 'Middlehall - processData', err.message);
         }
       }
     }
   } catch (err) {
-    serviceHelper.log('error', 'Middlehall - processData', err);
+    serviceHelper.log('error', 'Middlehall - processData', err.message);
   }
   return true;
 };

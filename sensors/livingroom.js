@@ -24,7 +24,7 @@ async function checkOffTimerIsActive(timerID) {
 
     return active;
   } catch (err) {
-    serviceHelper.log('error', 'Livingroom - checkOffTimerIsActive', err);
+    serviceHelper.log('error', 'Livingroom - checkOffTimerIsActive', err.message);
   }
   return active;
 }
@@ -121,12 +121,12 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('error', 'Livingroom - processData', err);
+          serviceHelper.log('error', 'Livingroom - processData', err.message);
         }
       }
     }
   } catch (err) {
-    serviceHelper.log('error', 'Livingroom - processData', err);
+    serviceHelper.log('error', 'Livingroom - processData', err.message);
   }
   return true;
 };
