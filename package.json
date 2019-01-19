@@ -9,24 +9,23 @@
   },
   "author": "JP",
   "dependencies": {
-    "dateformat": "*",
-    "dotenv": "*",
-    "fs": "*",
-    "huejay": "*",
-    "ip": "*",
-    "nodemon": "^1.18.7",
-    "os": "*",
-    "pg": "*",
-    "pure-uuid": "*",
-    "request": "*",
-    "request-promise": "*",
-    "restify": "*",
-    "restify-router": "*",
-    "winston": "*"
+    "dateformat": "latest",
+    "dotenv": "latest",
+    "fs": "latest",
+    "huejay": "latest",
+    "ip": "latest",
+    "os": "latest",
+    "pg": "latest",
+    "pure-uuid": "latest",
+    "request": "latest",
+    "request-promise": "latest",
+    "restify": "latest",
+    "restify-router": "latest",
+    "winston": "latest"
   },
   "devDependencies": {
-    "eslint": "^5.5.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint": "latest",
+    "eslint-config-airbnb-base": "latest",
+    "eslint-plugin-import": "latest"
   }
 }
