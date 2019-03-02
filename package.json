@@ -4,8 +4,8 @@
   "description": "Alfred Lights Service",
   "main": "lib/server.js",
   "scripts": {
-    "start": "node lib/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node lib/server.js | pino-elasticsearch -i alfred -H alfred_elk_elasticsearch_1 -p 9200",
+    "dev": "node lib/server.js"
   },
   "author": "JP",
   "dependencies": {
@@ -21,7 +21,8 @@
     "request-promise": "latest",
     "restify": "latest",
     "restify-router": "latest",
-    "winston": "latest"
+    "pino": "latest",
+    "pino-pretty": "latest"
   },
   "devDependencies": {
     "eslint": "latest",

@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+
+  alfred_lights_service:
+    build: .
+    image: alfred_lights_service:latest
+    container_name: alfred_lights_service
+    restart: always
+    extra_hosts:
+      - "alfred_elk_elasticsearch_1:192.168.1.4"
+    hostname: alfred_lights_service
