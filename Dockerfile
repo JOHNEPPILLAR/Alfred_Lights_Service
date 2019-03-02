@@ -1,9 +1,18 @@
 FROM node:11-alpine
 
 RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone \
-	&& apt-get -y update \
-	&& mkdir -p /home/nodejs/app 
-
+  && mkdir -p /home/nodejs/app \
+  && apk --no-cache --virtual build-dependencies add \
+	g++ \
+	gcc \
+	libgcc \
+	libstdc++ \
+	linux-headers \
+	make \
+	python \
+  && npm install --quiet node-gyp -g \
+  && rm -rf /var/cache/apk/*
+  
 WORKDIR /home/nodejs/app
 
 COPY . /home/nodejs/app
