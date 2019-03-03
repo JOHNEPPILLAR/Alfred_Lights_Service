@@ -7,7 +7,7 @@ services:
     image: alfred_lights_service:latest
     container_name: alfred_lights_service
     restart: always
-     ports:
+    ports:
       - "3978:3978"
     extra_hosts:
       - "alfred_elk_elasticsearch_1:192.168.1.4"
