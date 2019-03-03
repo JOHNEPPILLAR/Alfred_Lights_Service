@@ -4,7 +4,7 @@
   "description": "Alfred Lights Service",
   "main": "lib/server.js",
   "scripts": {
-    "start": "node lib/server.js | pino-elasticsearch -i alfred -H alfred_elk_elasticsearch_1 -p 9200",
+    "start": "node lib/server.js | pino-elasticsearch -i alfred -H alfred_elk_elasticsearch_1 -l info",
     "dev": "node lib/server.js"
   },
   "author": "JP",
