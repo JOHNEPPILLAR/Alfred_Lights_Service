@@ -315,7 +315,7 @@ async function lightGroupOnOff(req, res, next) {
       if (typeof scene !== 'undefined' && scene != null) {
         light.xy = serviceHelper.lightSceneXY(scene);
       }
-      
+
       if (colorLoop) {
         light.effect = 'colorloop';
       }
