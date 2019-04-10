@@ -20,7 +20,7 @@ async function processSensorData(apiData) {
 
 // Get sensor data
 async function getSensorData() {
-  serviceHelper.log('trace', 'getSensorData', 'Get sensor data');
+  serviceHelper.log('trace', 'Get sensor data');
   try {
     const apiData = await lightsHelper.lightMotion();
     processSensorData(apiData);
@@ -28,13 +28,13 @@ async function getSensorData() {
     // Check timer frequency
     if (timer > threeSeconds) {
       timer = threeSeconds; // Reset timer to back 3 seconds
-      serviceHelper.log('info', 'getSensorData', `Setting timer to ${timer / 1000} seconds`);
+      serviceHelper.log('info', `Setting timer to ${timer / 1000} seconds`);
     }
   } catch (err) {
-    serviceHelper.log('error', 'getSensorData', err);
+    serviceHelper.log('error', err.message);
     if (timer === threeSeconds) {
       timer *= 3; // Set timer to 9 seconds
-      serviceHelper.log('info', 'getSensorData', `Setting timer to ${timer / 1000} seconds`);
+      serviceHelper.log('info', `Setting timer to ${timer / 1000} seconds`);
     }
     return err;
   }
@@ -45,7 +45,7 @@ async function getSensorData() {
 function setup() {
   setTimeout(() => {
     if (process.env.Mock === 'true') {
-      serviceHelper.log('info', 'getSensorData', 'Mocking enabled. Will not process sensor data');
+      serviceHelper.log('info', 'Mocking enabled. Will not process sensor data');
     } else {
       getSensorData(); // Get data from Hue hub and then process it
       setup(); // Recursive call back to this function

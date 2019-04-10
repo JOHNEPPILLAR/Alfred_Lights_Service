@@ -1,0 +1,25 @@
+version: '3.5'
+
+services:
+
+  alfred_lights_service:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    image: alfred_lights_service:latest
+    container_name: alfred_lights_service
+    extra_hosts:
+      - "alfred_elk_elasticsearch_1:192.168.1.4"
+    restart: always
+    hostname: alfred_lights_service
+    networks:
+      - alfred
+    ports:
+      - "3983:3978"
+    command: npm run dev
+
+networks:
+
+  alfred:
+    name: alfred
+    driver: bridge

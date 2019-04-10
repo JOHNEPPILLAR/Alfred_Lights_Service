@@ -35,7 +35,7 @@ const skill = new Skills();
  *
  */
 async function listSensors(req, res, next) {
-  serviceHelper.log('trace', 'list sensors', 'List Sensors API called');
+  serviceHelper.log('trace', 'List Sensors API called');
 
   let dbClient;
   let results;
@@ -43,19 +43,19 @@ async function listSensors(req, res, next) {
   try {
     // Get data from data store
     const SQL = 'SELECT * FROM sensor_settings ORDER BY id';
-    serviceHelper.log('trace', 'listSensors', 'Connect to data store connection pool');
+    serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
-    serviceHelper.log('trace', 'listSensors', 'Get sensors');
+    serviceHelper.log('trace', 'Get sensors');
     results = await dbClient.query(SQL);
-    serviceHelper.log('trace', 'listSensors', 'Release the data store connection back to the pool');
+    serviceHelper.log('trace', 'Release the data store connection back to the pool');
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results);
     next();
   } catch (err) {
-    serviceHelper.log('error', 'listSensors', err.message);
-    serviceHelper.sendResponse(res, false, err);
+    serviceHelper.log('error', err.message);
+    serviceHelper.sendResponse(res, false, err.message);
     next();
   }
   return true;
@@ -83,7 +83,7 @@ skill.get('/list', listSensors);
  *
  */
 async function saveSensors(req, res, next) {
-  serviceHelper.log('trace', 'saveSensors', 'Save Schedule API called');
+  serviceHelper.log('trace', 'Save Schedule API called');
 
   let dbClient;
   let results;
@@ -103,24 +103,24 @@ async function saveSensors(req, res, next) {
       active,
     ];
 
-    serviceHelper.log('trace', 'saveSensors', 'Connect to data store connection pool');
+    serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
-    serviceHelper.log('trace', 'saveSensors', 'Save sensor');
+    serviceHelper.log('trace', 'Save sensor');
     results = await dbClient.query(SQL, SQLValues);
-    serviceHelper.log('trace', 'saveSensors', 'Release the data store connection back to the pool');
+    serviceHelper.log('trace', 'Release the data store connection back to the pool');
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
     if (results.rowCount === 1) {
-      serviceHelper.log('info', 'saveSensors', `Saved sensor data: ${JSON.stringify(req.body)}`);
+      serviceHelper.log('info', `Saved sensor data: ${JSON.stringify(req.body)}`);
       serviceHelper.sendResponse(res, true, 'saved');
     } else {
-      serviceHelper.log('error', 'saveSensors', 'Failed to save data');
+      serviceHelper.log('error', 'Failed to save data');
       serviceHelper.sendResponse(res, false, 'failed to save');
     }
     next();
   } catch (err) {
-    serviceHelper.log('error', 'saveSensors', err.message);
+    serviceHelper.log('error', err.message);
     serviceHelper.sendResponse(res, false, 'failed to save');
     next();
   }

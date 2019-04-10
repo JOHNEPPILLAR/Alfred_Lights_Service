@@ -7,24 +7,24 @@ const serviceHelper = require('../lib/helper.js');
 const lightsHelper = require('../api/lights/lights.js');
 
 async function checkOffTimerIsActive(timerID) {
-  serviceHelper.log('trace', 'Middlehall - checkOffTimerIsActive', `Getting data for timer ${timerID}`);
+  serviceHelper.log('trace', `Getting data for timer ${timerID}`);
   let active = true;
   let results;
   let dbClient;
 
   try {
     const SQL = `SELECT name FROM timers where id = ${timerID} and active`;
-    serviceHelper.log('trace', 'Middlehall - processData', 'Connect to data store connection pool');
+    serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.schedulesDataClient.connect(); // Connect to data store
-    serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
+    serviceHelper.log('trace', 'Get list of active services');
     results = await dbClient.query(SQL);
-    serviceHelper.log('trace', 'Middlehall - processData', 'Release the data store connection back to the pool');
+    serviceHelper.log('trace', 'Release the data store connection back to the pool');
     await dbClient.release(); // Return data store connection back to pool
 
     if (results.rowCount === 0) active = false;
     return active;
   } catch (err) {
-    serviceHelper.log('error', 'Middlehall - processData', err.message);
+    serviceHelper.log('error', err.message);
   }
   return active;
 }
@@ -38,7 +38,7 @@ exports.processData = async (sensor) => {
 
   // Check sensors
   try {
-    serviceHelper.log('trace', 'Middlehall - processData', 'Processing sensor data');
+    serviceHelper.log('trace', 'Processing sensor data');
 
     // Living room lights are off so check motion and brightness
     sensor.forEach((sensorItem) => {
@@ -54,7 +54,7 @@ exports.processData = async (sensor) => {
     });
 
     if (motion && lowLight) {
-      serviceHelper.log('trace', 'Middlehall - processData', 'Motion and light activated');
+      serviceHelper.log('trace', 'Motion and light activated');
 
       req = { body: { lightNumber: 1 } };
       const lightstate = await lightsHelper.lightState(req);
@@ -67,28 +67,28 @@ exports.processData = async (sensor) => {
 
         try {
           const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 3';
-          serviceHelper.log('trace', 'Middlehall - processData', 'Connect to data store connection pool');
+          serviceHelper.log('trace', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
-          serviceHelper.log('trace', 'Middlehall - processData', 'Get list of active services');
+          serviceHelper.log('trace', 'Get list of active services');
           results = await dbClient.query(SQL);
-          serviceHelper.log('trace', 'Middlehall - processData', 'Release the data store connection back to the pool');
+          serviceHelper.log('trace', 'Release the data store connection back to the pool');
           await dbClient.release(); // Return data store connection back to pool
 
           if (results.rowCount === 0) {
-            serviceHelper.log('trace', 'Middlehall - processData', 'No active light sensor settings');
+            serviceHelper.log('trace', 'No active light sensor settings');
             return false;
           }
 
           // Decide what scene and brightness to use depending upon time of day
-          serviceHelper.log('trace', 'Middlehall - processData', 'Decide what scene and brightness to use depending upon time of day');
+          serviceHelper.log('trace', 'Decide what scene and brightness to use depending upon time of day');
 
           const currentTime = (dateFormat(new Date(), 'HH:MM'));
 
           results.rows.forEach(async (lightInfo) => {
             if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
-              serviceHelper.log('trace', 'Middlehall - processData', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
+              serviceHelper.log('trace', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
 
-              serviceHelper.log('trace', 'Middlehall - processData', 'Construct the api call');
+              serviceHelper.log('trace', 'Construct the api call');
               body = {
                 lightNumber: lightInfo.light_group_number,
                 lightAction: lightInfo.light_action,
@@ -96,9 +96,9 @@ exports.processData = async (sensor) => {
                 scene: lightInfo.scene,
               };
 
-              serviceHelper.log('trace', 'Middlehall - processData', JSON.stringify(body));
+              serviceHelper.log('trace', JSON.stringify(body));
 
-              serviceHelper.log('trace', 'Middlehall - processData', 'Figure out if lights require turning off');
+              serviceHelper.log('trace', 'Figure out if lights require turning off');
               switch (lightInfo.turn_off) {
                 case 'TRUE':
                   turnOffLightTimer = true;
@@ -110,7 +110,7 @@ exports.processData = async (sensor) => {
                   try {
                     turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
                   } catch (err) {
-                    serviceHelper.log('error', 'Middlehall - processData', err.message);
+                    serviceHelper.log('error', err.message);
                   }
               }
 
@@ -118,7 +118,7 @@ exports.processData = async (sensor) => {
               lightsHelper.lightOnOff(req);
 
               if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-                serviceHelper.log('trace', 'Middlehall - processData', `Setting ${serviceHelper.getLightName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
+                serviceHelper.log('trace', `Setting ${serviceHelper.getLightName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
                 setTimeout(() => {
                   req = { body: { lightNumber: lightInfo.light_group_number, lightAction: 'off' } };
                   lightsHelper.lightOnOff(req);
@@ -127,12 +127,12 @@ exports.processData = async (sensor) => {
             }
           });
         } catch (err) {
-          serviceHelper.log('error', 'Middlehall - processData', err.message);
+          serviceHelper.log('error', err.message);
         }
       }
     }
   } catch (err) {
-    serviceHelper.log('error', 'Middlehall - processData', err.message);
+    serviceHelper.log('error', err.message);
   }
   return true;
 };
