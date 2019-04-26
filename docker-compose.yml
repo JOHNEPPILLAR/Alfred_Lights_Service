@@ -10,7 +10,7 @@ services:
     hostname: alfred_lights_service
     network_mode: nat
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3978"]
+      test: ["CMD", "curl", "-f", "https://localhost:3978"]
       interval: 60s
       timeout: 10s
       retries: 10
