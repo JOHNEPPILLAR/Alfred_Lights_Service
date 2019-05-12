@@ -9,7 +9,6 @@
   },
   "author": "JP",
   "dependencies": {
-    "elastic-apm-node": "latest",
     "dateformat": "latest",
     "dotenv": "latest",
     "fs": "latest",
@@ -24,7 +23,8 @@
     "restify-router": "latest",
     "pino": "latest",
     "pino-pretty": "latest",
-    "path": "latest"
+    "path": "latest",
+    "elasticsearch": "latest"
   },
   "devDependencies": {
     "eslint": "latest",
