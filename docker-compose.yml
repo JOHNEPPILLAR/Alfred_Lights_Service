@@ -10,7 +10,7 @@ services:
     hostname: alfred_lights_service
     networks:
       - alfred 
-    
+
 networks:
 
   alfred:

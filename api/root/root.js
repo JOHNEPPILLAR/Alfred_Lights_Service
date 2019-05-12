@@ -49,7 +49,6 @@ function ping(req, res, next) {
 
     try {
       client.index({
-        id: '1',
         index: 'health',
         type: 'health',
         body: {
