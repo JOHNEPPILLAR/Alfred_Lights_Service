@@ -37,12 +37,18 @@ const skill = new Skills();
 async function listSensors(req, res, next) {
   serviceHelper.log('trace', 'List Sensors API called');
 
+  const { roomNumber } = req.query;
+
   let dbClient;
   let results;
 
   try {
-    // Get data from data store
-    const SQL = 'SELECT * FROM sensor_settings ORDER BY id';
+    let SQL = 'SELECT * FROM sensor_settings ORDER BY id';
+
+    if (typeof roomNumber !== 'undefined' || roomNumber !== null || roomNumber !== '') {
+      SQL = `SELECT * FROM sensor_settings WHERE light_group_number = ${roomNumber} ORDER BY id`;
+    }
+    
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
