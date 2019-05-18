@@ -18,13 +18,21 @@ const skill = new Skills();
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
  *   {
- *      "data": {
- *       "command": "SELECT",
- *       "rowCount": 7,
- *       "oid": null,
- *       "rows": [ .. ]",
+ *      "data": [
+ *       {
+ *           "id": 1,
+ *           "sensor_id": 1,
+ *           "start_time": "00:00",
+ *           "end_time": "08:30",
+ *           "light_group_number": 7,
+ *           "light_action": "on",
+ *           "brightness": 40,
+ *           "active": true,
+ *           "turn_off": "TRUE",
+ *           "scene": 3
+ *       },
  *       ...
- *      }
+ *      ]
  *   }
  *
  * @apiErrorExample {json} Error-Response:
@@ -48,7 +56,7 @@ async function listSensors(req, res, next) {
     if (typeof roomNumber !== 'undefined' || roomNumber !== null || roomNumber !== '') {
       SQL = `SELECT * FROM sensor_settings WHERE light_group_number = ${roomNumber} ORDER BY id`;
     }
-    
+
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
@@ -67,6 +75,72 @@ async function listSensors(req, res, next) {
   return true;
 }
 skill.get('/list', listSensors);
+
+/**
+ * @api {get} /sensors/get get sensor data
+ * @apiName get
+ * @apiGroup Sensors
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTPS/1.1 200 OK
+ *   {
+ *      "data": [
+ *       {
+ *           "id": 1,
+ *           "sensor_id": 1,
+ *           "start_time": "00:00",
+ *           "end_time": "08:30",
+ *           "light_group_number": 7,
+ *           "light_action": "on",
+ *           "brightness": 40,
+ *           "active": true,
+ *           "turn_off": "TRUE",
+ *           "scene": 3
+ *       }
+ *      ]
+ *   }
+ *
+ * @apiErrorExample {json} Error-Response:
+ *   HTTPS/1.1 500 Internal error
+ *   {
+ *     data: Error message
+ *   }
+ *
+ */
+async function getSensor(req, res, next) {
+  serviceHelper.log('trace', 'Get Sensor API called');
+
+  const { sensorID } = req.query;
+
+  let dbClient;
+  let results;
+
+  try {
+    if (typeof sensorID === 'undefined' || sensorID === null || sensorID === '') {
+      serviceHelper.sendResponse(res, 400, 'Missing param: sensorID');
+      next();
+      return;
+    }
+
+    const SQL = `SELECT * FROM sensor_settings WHERE id = ${sensorID}`;
+
+    serviceHelper.log('trace', 'Connect to data store connection pool');
+    dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    serviceHelper.log('trace', 'Get sensor');
+    results = await dbClient.query(SQL);
+    serviceHelper.log('trace', 'Release the data store connection back to the pool');
+    await dbClient.release(); // Return data store connection back to pool
+
+    // Send data back to caler
+    serviceHelper.sendResponse(res, true, results.rows);
+    next();
+  } catch (err) {
+    serviceHelper.log('error', err.message);
+    serviceHelper.sendResponse(res, false, err.message);
+    next();
+  }
+}
+skill.get('/get', getSensor);
 
 /**
  * @api {put} /sensors/save save schedule
