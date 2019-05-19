@@ -132,8 +132,6 @@ async function getSensor(req, res, next) {
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
-    serviceHelper.log('info', JSON.stringify(results));
-
     serviceHelper.sendResponse(res, true, results.rows);
     next();
   } catch (err) {
