@@ -40,12 +40,16 @@ exports.processData = async (sensor) => {
 
     // Living room lights are off so check motion and brightness
     sensor.forEach((sensorItem) => {
-      if (sensorItem.attributes.attributes.id === '13') { // Motion sensor
+      if (sensorItem.attributes.attributes.id === '13') {
+        // Motion sensor
         if (sensorItem.state.attributes.attributes.presence) motion = true;
       }
-      if (sensorItem.attributes.attributes.id === '14') { // Ambient light sensor
-        if (sensorItem.state.attributes.attributes.lightlevel
-          <= sensorItem.config.attributes.attributes.tholddark) {
+      if (sensorItem.attributes.attributes.id === '14') {
+        // Ambient light sensor
+        if (
+          sensorItem.state.attributes.attributes.lightlevel
+          <= sensorItem.config.attributes.attributes.tholddark
+        ) {
           lowLight = true;
         }
       }
@@ -73,18 +77,28 @@ exports.processData = async (sensor) => {
           await dbClient.release(); // Return data store connection back to pool
 
           if (results.rowCount === 0) {
-            serviceHelper.log('trace', 'Fronthall - processData', 'No active light sensor settings');
+            serviceHelper.log(
+              'trace',
+              'Fronthall - processData',
+              'No active light sensor settings',
+            );
             return false;
           }
 
           // Decide what scene and brightness to use depending upon time of day
-          serviceHelper.log('trace', 'Decide what scene and brightness to use depending upon time of day');
+          serviceHelper.log(
+            'trace',
+            'Decide what scene and brightness to use depending upon time of day',
+          );
 
-          const currentTime = (dateFormat(new Date(), 'HH:MM'));
+          const currentTime = dateFormat(new Date(), 'HH:MM');
 
           results.rows.forEach(async (lightInfo) => {
             if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
-              serviceHelper.log('trace', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
+              serviceHelper.log(
+                'trace',
+                `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`,
+              );
               serviceHelper.log('trace', 'Construct the api call');
               body = {
                 lightGroupNumber: lightInfo.light_group_number,
@@ -114,10 +128,18 @@ exports.processData = async (sensor) => {
               serviceHelper.log('trace', req);
               lightsHelper.lightGroupOnOff(req);
 
-              if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-                serviceHelper.log('trace', `Setting ${serviceHelper.getLightGroupName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
+              if (turnOffLightTimer) {
+                // Schedule to turn off lights after 3 minutes
+                serviceHelper.log(
+                  'trace',
+                  `Setting ${serviceHelper.getLightGroupName(
+                    lightInfo.light_group_number,
+                  )} lights timer to turn off in 3 minutes`,
+                );
                 setTimeout(() => {
-                  req = { body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' } };
+                  req = {
+                    body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' },
+                  };
                   lightsHelper.lightGroupOnOff(req);
                 }, turnOffIn);
               }

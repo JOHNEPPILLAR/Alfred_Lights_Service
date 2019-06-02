@@ -1,4 +1,3 @@
-
 /**
  * Import external libraries
  */
@@ -42,12 +41,16 @@ exports.processData = async (sensor) => {
 
     // Living room lights are off so check motion and brightness
     sensor.forEach((sensorItem) => {
-      if (sensorItem.attributes.attributes.id === '27') { // Motion sensor
+      if (sensorItem.attributes.attributes.id === '27') {
+        // Motion sensor
         if (sensorItem.state.attributes.attributes.presence) motion = true;
       }
-      if (sensorItem.attributes.attributes.id === '28') { // Ambient light sensor
-        if (sensorItem.state.attributes.attributes.lightlevel
-          <= sensorItem.config.attributes.attributes.tholddark) {
+      if (sensorItem.attributes.attributes.id === '28') {
+        // Ambient light sensor
+        if (
+          sensorItem.state.attributes.attributes.lightlevel
+          <= sensorItem.config.attributes.attributes.tholddark
+        ) {
           lowLight = true;
         }
       }
@@ -80,13 +83,19 @@ exports.processData = async (sensor) => {
           }
 
           // Decide what scene and brightness to use depending upon time of day
-          serviceHelper.log('trace', 'Decide what scene and brightness to use depending upon time of day');
+          serviceHelper.log(
+            'trace',
+            'Decide what scene and brightness to use depending upon time of day',
+          );
 
-          const currentTime = (dateFormat(new Date(), 'HH:MM'));
+          const currentTime = dateFormat(new Date(), 'HH:MM');
 
           results.rows.forEach(async (lightInfo) => {
             if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
-              serviceHelper.log('trace', `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`);
+              serviceHelper.log(
+                'trace',
+                `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`,
+              );
 
               serviceHelper.log('trace', 'Construct the api call');
               body = {
@@ -117,8 +126,14 @@ exports.processData = async (sensor) => {
               req = { body };
               lightsHelper.lightOnOff(req);
 
-              if (turnOffLightTimer) { // Schedule to turn off lights after 3 minutes
-                serviceHelper.log('trace', `Setting ${serviceHelper.getLightName(lightInfo.light_group_number)} lights timer to turn off in 3 minutes`);
+              if (turnOffLightTimer) {
+                // Schedule to turn off lights after 3 minutes
+                serviceHelper.log(
+                  'trace',
+                  `Setting ${serviceHelper.getLightName(
+                    lightInfo.light_group_number,
+                  )} lights timer to turn off in 3 minutes`,
+                );
                 setTimeout(() => {
                   req = { body: { lightNumber: lightInfo.light_group_number, lightAction: 'off' } };
                   lightsHelper.lightOnOff(req);

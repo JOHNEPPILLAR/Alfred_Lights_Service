@@ -168,20 +168,21 @@ async function saveSensors(req, res, next) {
   let dbClient;
   let results;
   const {
-    id, start_time, end_time, scene, brightness, active,
+    id,
+    // eslint-disable-next-line camelcase
+    start_time,
+    // eslint-disable-next-line camelcase
+    end_time,
+    scene,
+    brightness,
+    active,
   } = req.body;
 
   try {
     // Update data in data store
     const SQL = 'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
-    const SQLValues = [
-      id,
-      start_time,
-      end_time,
-      scene,
-      brightness,
-      active,
-    ];
+    // eslint-disable-next-line camelcase
+    const SQLValues = [id, start_time, end_time, scene, brightness, active];
 
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
