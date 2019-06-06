@@ -1,8 +1,8 @@
 FROM node:12-alpine
 
 RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone \
-  && mkdir -p /home/nodejs/app \
-  && apk --no-cache --virtual build-dependencies add \
+	&& mkdir -p /home/nodejs/app \
+	&& apk --no-cache --virtual build-dependencies add \
 	git \ 
 	g++ \
 	gcc \
@@ -11,12 +11,15 @@ RUN ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/Lond
 	linux-headers \
 	make \
 	python \
-  && npm install --quiet node-gyp -g \
-  && rm -rf /var/cache/apk/*
-  
+	&& npm install --quiet node-gyp -g \
+	&& rm -rf /var/cache/apk/*
+
 WORKDIR /home/nodejs/app
 
 COPY . /home/nodejs/app
+
+RUN mv certs/alfred_lights_service-key.pem certs/server.key \
+	&& mv certs/alfred_lights_service.pem certs/server.crt 
 
 RUN npm update \
 	&& npm install --production \
