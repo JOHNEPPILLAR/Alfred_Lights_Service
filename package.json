@@ -4,14 +4,14 @@
   "description": "Alfred Lights Service",
   "main": "lib/server.js",
   "scripts": {
-    "start": "node lib/server.js | pino-elasticsearch -i alfred -H 192.168.1.4 -l info",
-    "dev": "nodemon lib/server.js"
+    "prod": "node lib/server.js | pino-elasticsearch --node http://192.168.1.4:9200 -l info -i alfred",
+    "test": "nodemon lib/server.js"
   },
   "author": "JP",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.1.0",
     "dateformat": "^3.0.3",
     "dotenv": "^8.0.0",
-    "elasticsearch": "^16.1.1",
     "fs": "^0.0.2",
     "huejay": "^1.9.0",
     "ip": "^1.1.5",
