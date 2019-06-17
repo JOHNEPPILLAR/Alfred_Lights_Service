@@ -1,7 +1,6 @@
 version: '3.5'
 
 services:
-
   alfred_lights_service:
     build: .
     image: alfred_lights_service:latest
@@ -9,10 +8,10 @@ services:
     restart: always
     hostname: alfred_lights_service
     networks:
-      - alfred 
+      - alfred
+    command: npm run prod
 
 networks:
-
   alfred:
     name: nat
     driver: nat
