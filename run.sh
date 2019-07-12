@@ -9,6 +9,7 @@ rm -rf node_modules
 ncu -u
 npm update
 npm install
+npm audit
 
 echo "Run the server"
 npm run test
