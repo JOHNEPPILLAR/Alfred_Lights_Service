@@ -26,8 +26,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "restify": "^8.3.3",
-    "restify-router": "^0.5.1",
-    "snyk": "^1.193.1"
+    "restify-router": "^0.5.1"
   },
   "devDependencies": {
     "eslint": "^6.0.1",
