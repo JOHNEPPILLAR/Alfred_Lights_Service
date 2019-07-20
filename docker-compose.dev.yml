@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile.dev
     image: alfred_lights_service:latest
     container_name: alfred_lights_service
-    extra_hosts:
-      - 'alfred_elk_elasticsearch_1:192.168.1.4'
     restart: always
     hostname: alfred_lights_service
     networks:
