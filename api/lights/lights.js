@@ -3,11 +3,11 @@
  */
 const hueBridge = require('huejay');
 const Skills = require('restify-router').Router;
+const serviceHelper = require('alfred_helper');
 
 /**
  * Import helper libraries
  */
-const serviceHelper = require('../../lib/helper.js');
 const listLightGroupsMock = require('../../mock/listLightGroups.json');
 const listLightsMock = require('../../mock/listLights.json');
 const lightMotionMock = require('../../mock/lightMotion.json');
@@ -103,7 +103,9 @@ async function listLightGroups(req, res, next) {
     serviceHelper.log('trace', 'Mock mode enabled');
     let returnJSON = listLightGroupsMock;
     serviceHelper.log('trace', 'Remove dimmers etc from data');
-    returnJSON = returnJSON.filter(o => (o.attributes.attributes.class !== undefined));
+    returnJSON = returnJSON.filter(
+      (o) => o.attributes.attributes.class !== undefined,
+    );
     serviceHelper.log('trace', 'Return Mock');
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, returnJSON);
@@ -117,7 +119,7 @@ async function listLightGroups(req, res, next) {
     serviceHelper.log('trace', 'Get data from HUE bridge');
     let lights = await hue.groups.getAll();
     serviceHelper.log('trace', 'Remove dimmers etc from data');
-    lights = lights.filter(o => (o.attributes.attributes.type === 'Room'));
+    lights = lights.filter((o) => o.attributes.attributes.type === 'Room');
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, lights);
       next();
@@ -172,7 +174,11 @@ async function allOff(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, false, 'There was a problem turning off all the lights.');
+      serviceHelper.sendResponse(
+        res,
+        false,
+        'There was a problem turning off all the lights.',
+      );
     } else {
       return err;
     }
@@ -209,16 +215,19 @@ skill.get('/alloff', allOff);
 async function lightOnOff(req, res, next) {
   serviceHelper.log('trace', 'lightOnOff API called');
   serviceHelper.log('trace', JSON.stringify(req.body));
-  const {
-    lightNumber, lightAction, brightness, scene, colorLoop,
-  } = req.body;
+  const { lightNumber, lightAction, brightness, scene, colorLoop } = req.body;
 
   let returnState;
   let returnMessage;
 
   try {
     // Configure light state
-    serviceHelper.log('trace', `Setting up light state ${serviceHelper.getLightName(lightNumber)} to save`);
+    serviceHelper.log(
+      'trace',
+      `Setting up light state ${serviceHelper.getLightName(
+        lightNumber,
+      )} to save`,
+    );
     const light = await hue.lights.getById(lightNumber);
     light.on = false;
     if (lightAction === 'on') {
@@ -235,16 +244,33 @@ async function lightOnOff(req, res, next) {
     }
 
     // Save light state
-    serviceHelper.log('trace', `Saving light ${serviceHelper.getLightName(lightNumber)} state`);
+    serviceHelper.log(
+      'trace',
+      `Saving light ${serviceHelper.getLightName(lightNumber)} state`,
+    );
     const saved = await hue.lights.save(light);
     if (saved) {
       returnState = true;
-      returnMessage = `Light ${serviceHelper.getLightName(lightNumber)} was turned ${lightAction}.`;
-      serviceHelper.log('info', `Light ${serviceHelper.getLightName(lightNumber)} was turned ${lightAction}.`);
+      returnMessage = `Light ${serviceHelper.getLightName(
+        lightNumber,
+      )} was turned ${lightAction}.`;
+      serviceHelper.log(
+        'info',
+        `Light ${serviceHelper.getLightName(
+          lightNumber,
+        )} was turned ${lightAction}.`,
+      );
     } else {
       returnState = false;
-      returnMessage = `There was an error turning light ${serviceHelper.getLightName(lightNumber)} ${lightAction}.`;
-      serviceHelper.log('error', `There was an error turning light ${serviceHelper.getLightName(lightNumber)} ${lightAction}.`);
+      returnMessage = `There was an error turning light ${serviceHelper.getLightName(
+        lightNumber,
+      )} ${lightAction}.`;
+      serviceHelper.log(
+        'error',
+        `There was an error turning light ${serviceHelper.getLightName(
+          lightNumber,
+        )} ${lightAction}.`,
+      );
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);
@@ -295,7 +321,11 @@ async function lightGroupOnOff(req, res, next) {
   serviceHelper.log('trace', JSON.stringify(req.body));
 
   const {
-    lightGroupNumber, lightAction, brightness, scene, colorLoop,
+    lightGroupNumber,
+    lightAction,
+    brightness,
+    scene,
+    colorLoop,
   } = req.body;
 
   let returnState;
@@ -303,7 +333,12 @@ async function lightGroupOnOff(req, res, next) {
 
   try {
     // Configure light state
-    serviceHelper.log('trace', `Setting up light group ${serviceHelper.getLightGroupName(lightGroupNumber)} state to save`);
+    serviceHelper.log(
+      'trace',
+      `Setting up light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} state to save`,
+    );
     const light = await hue.groups.getById(lightGroupNumber);
     light.on = false;
     if (lightAction === 'on') {
@@ -322,17 +357,36 @@ async function lightGroupOnOff(req, res, next) {
     }
 
     // Save light group state
-    serviceHelper.log('trace', `Saving light group ${serviceHelper.getLightGroupName(lightGroupNumber)} state`);
+    serviceHelper.log(
+      'trace',
+      `Saving light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} state`,
+    );
     const saved = await hue.groups.save(light);
 
     if (saved) {
       returnState = true;
-      returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`;
-      serviceHelper.log('info', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} was turned ${lightAction}.`);
+      returnMessage = `Light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} was turned ${lightAction}.`;
+      serviceHelper.log(
+        'info',
+        `Light group ${serviceHelper.getLightGroupName(
+          lightGroupNumber,
+        )} was turned ${lightAction}.`,
+      );
     } else {
       returnState = false;
-      returnMessage = `There was an error turning light group ${serviceHelper.getLightGroupName(lightGroupNumber)} ${lightAction}.`;
-      serviceHelper.log('error', `There was an error turning light group ${serviceHelper.getLightGroupName(lightGroupNumber)} ${lightAction}.`);
+      returnMessage = `There was an error turning light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} ${lightAction}.`;
+      serviceHelper.log(
+        'error',
+        `There was an error turning light group ${serviceHelper.getLightGroupName(
+          lightGroupNumber,
+        )} ${lightAction}.`,
+      );
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);
@@ -432,8 +486,13 @@ async function lightMotion(req, res, next) {
     }
 
     let sensorData = await hue.sensors.getAll();
-    serviceHelper.log('trace', 'Filter and only allow ZLLPresence and ZLLLightLevel in data');
-    sensorData = sensorData.filter(o => (o.type === 'ZLLPresence' || o.type === 'ZLLLightLevel'));
+    serviceHelper.log(
+      'trace',
+      'Filter and only allow ZLLPresence and ZLLLightLevel in data',
+    );
+    sensorData = sensorData.filter(
+      (o) => o.type === 'ZLLPresence' || o.type === 'ZLLLightLevel',
+    );
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, sensorData);
       next();
@@ -572,7 +631,11 @@ async function scenes(req, res, next) {
   try {
     serviceHelper.log('trace', 'scenes API called');
     const lights = await hue.scenes.getAll();
-    const returnData = lights.filter(o => (o.attributes.attributes.owner.toString() === '9FLuZJvC-N6WNxKvlFVOiEHEMVUPv9bS0Yx-woRL'));
+    const returnData = lights.filter(
+      (o) =>
+        o.attributes.attributes.owner.toString() ===
+        '9FLuZJvC-N6WNxKvlFVOiEHEMVUPv9bS0Yx-woRL',
+    );
 
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, true, returnData);
@@ -629,12 +692,26 @@ async function lightBrightness(req, res, next) {
     const saved = await hue.save(lights);
     if (saved) {
       returnState = true;
-      returnMessage = `Light ${serviceHelper.getLightName(lightNumber)} brightness was set to ${brightness}.`;
-      serviceHelper.log('info', `Light ${serviceHelper.getLightName(lightNumber)} brightness was set to ${brightness}.`);
+      returnMessage = `Light ${serviceHelper.getLightName(
+        lightNumber,
+      )} brightness was set to ${brightness}.`;
+      serviceHelper.log(
+        'info',
+        `Light ${serviceHelper.getLightName(
+          lightNumber,
+        )} brightness was set to ${brightness}.`,
+      );
     } else {
       returnState = false;
-      returnMessage = `There was an error updating light ${serviceHelper.getLightName(lightNumber)} brighness to ${brightness}.`;
-      serviceHelper.log('error', `There was an error updating light ${serviceHelper.getLightName(lightNumber)} brighness to ${brightness}.`);
+      returnMessage = `There was an error updating light ${serviceHelper.getLightName(
+        lightNumber,
+      )} brighness to ${brightness}.`;
+      serviceHelper.log(
+        'error',
+        `There was an error updating light ${serviceHelper.getLightName(
+          lightNumber,
+        )} brighness to ${brightness}.`,
+      );
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);
@@ -691,12 +768,26 @@ async function lightGroupBrightness(req, res, next) {
     const saved = await hue.groups.save(lights);
     if (saved) {
       returnState = true;
-      returnMessage = `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`;
-      serviceHelper.log('info', `Light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brightness was set to ${brightness}.`);
+      returnMessage = `Light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} brightness was set to ${brightness}.`;
+      serviceHelper.log(
+        'info',
+        `Light group ${serviceHelper.getLightGroupName(
+          lightGroupNumber,
+        )} brightness was set to ${brightness}.`,
+      );
     } else {
       returnState = false;
-      returnMessage = `There was an error updating light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brighness to ${brightness}.`;
-      serviceHelper.log('error', `There was an error updating light group ${serviceHelper.getLightGroupName(lightGroupNumber)} brighness to ${brightness}.`);
+      returnMessage = `There was an error updating light group ${serviceHelper.getLightGroupName(
+        lightGroupNumber,
+      )} brighness to ${brightness}.`;
+      serviceHelper.log(
+        'error',
+        `There was an error updating light group ${serviceHelper.getLightGroupName(
+          lightGroupNumber,
+        )} brighness to ${brightness}.`,
+      );
     }
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, returnState, returnMessage);

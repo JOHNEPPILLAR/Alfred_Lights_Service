@@ -2,7 +2,11 @@
  * Import external libraries
  */
 const dateFormat = require('dateformat');
-const serviceHelper = require('../lib/helper.js');
+const serviceHelper = require('alfred_helper');
+
+/**
+ * Import helper libraries
+ */
 const lightsHelper = require('../api/lights/lights.js');
 
 async function checkOffTimerIsActive(timerID) {
@@ -16,7 +20,10 @@ async function checkOffTimerIsActive(timerID) {
     dbClient = await global.schedulesDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get list of active services');
     results = await dbClient.query(SQL);
-    serviceHelper.log('trace', 'Release the data store connection back to the pool');
+    serviceHelper.log(
+      'trace',
+      'Release the data store connection back to the pool',
+    );
     await dbClient.release(); // Return data store connection back to pool
 
     if (results.rowCount === 0) active = false;
@@ -47,8 +54,8 @@ exports.processData = async (sensor) => {
       if (sensorItem.attributes.attributes.id === '14') {
         // Ambient light sensor
         if (
-          sensorItem.state.attributes.attributes.lightlevel
-          <= sensorItem.config.attributes.attributes.tholddark
+          sensorItem.state.attributes.attributes.lightlevel <=
+          sensorItem.config.attributes.attributes.tholddark
         ) {
           lowLight = true;
         }
@@ -68,12 +75,16 @@ exports.processData = async (sensor) => {
         let dbClient;
 
         try {
-          const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 1';
+          const SQL =
+            'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_settings WHERE active AND sensor_id = 1';
           serviceHelper.log('trace', 'Connect to data store connection pool');
           dbClient = await global.lightsDataClient.connect(); // Connect to data store
           serviceHelper.log('trace', 'Get list of active services');
           results = await dbClient.query(SQL);
-          serviceHelper.log('trace', 'Release the data store connection back to the pool');
+          serviceHelper.log(
+            'trace',
+            'Release the data store connection back to the pool',
+          );
           await dbClient.release(); // Return data store connection back to pool
 
           if (results.rowCount === 0) {
@@ -94,7 +105,10 @@ exports.processData = async (sensor) => {
           const currentTime = dateFormat(new Date(), 'HH:MM');
 
           results.rows.forEach(async (lightInfo) => {
-            if (currentTime >= lightInfo.start_time && currentTime <= lightInfo.end_time) {
+            if (
+              currentTime >= lightInfo.start_time &&
+              currentTime <= lightInfo.end_time
+            ) {
               serviceHelper.log(
                 'trace',
                 `${currentTime} active in ${lightInfo.start_time} and ${lightInfo.end_time}`,
@@ -108,7 +122,10 @@ exports.processData = async (sensor) => {
               };
               serviceHelper.log('trace', JSON.stringify(body));
 
-              serviceHelper.log('trace', 'Figure out if lights require turning off');
+              serviceHelper.log(
+                'trace',
+                'Figure out if lights require turning off',
+              );
               switch (lightInfo.turn_off) {
                 case 'TRUE':
                   turnOffLightTimer = true;
@@ -118,7 +135,9 @@ exports.processData = async (sensor) => {
                   break;
                 default:
                   try {
-                    turnOffLightTimer = await checkOffTimerIsActive(lightInfo.turn_off);
+                    turnOffLightTimer = await checkOffTimerIsActive(
+                      lightInfo.turn_off,
+                    );
                   } catch (err) {
                     serviceHelper.log('error', err.message);
                   }
@@ -138,7 +157,10 @@ exports.processData = async (sensor) => {
                 );
                 setTimeout(() => {
                   req = {
-                    body: { lightGroupNumber: lightInfo.light_group_number, lightAction: 'off' },
+                    body: {
+                      lightGroupNumber: lightInfo.light_group_number,
+                      lightAction: 'off',
+                    },
                   };
                   lightsHelper.lightGroupOnOff(req);
                 }, turnOffIn);

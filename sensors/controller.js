@@ -1,9 +1,12 @@
 /**
  * Import external libraries
  */
-const serviceHelper = require('../lib/helper.js');
-const lightsHelper = require('../api/lights/lights.js');
+const serviceHelper = require('alfred_helper');
 
+/**
+ * Import helper libraries
+ */
+const lightsHelper = require('../api/lights/lights.js');
 const livingRoomSensor = require('./livingroom.js');
 const frontHallSensor = require('./fronthall.js');
 const middleHallSensor = require('./middlehall.js');
@@ -45,7 +48,10 @@ async function getSensorData() {
 function setup() {
   setTimeout(() => {
     if (process.env.Mock === 'true') {
-      serviceHelper.log('info', 'Mocking enabled. Will not process sensor data');
+      serviceHelper.log(
+        'info',
+        'Mocking enabled. Will not process sensor data',
+      );
     } else {
       getSensorData(); // Get data from Hue hub and then process it
       setup(); // Recursive call back to this function

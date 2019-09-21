@@ -2,11 +2,7 @@
  * Import external libraries
  */
 const Skills = require('restify-router').Router;
-
-/**
- * Import helper libraries
- */
-const serviceHelper = require('../../lib/helper.js');
+const serviceHelper = require('alfred_helper');
 
 const skill = new Skills();
 
@@ -53,7 +49,11 @@ async function listSensors(req, res, next) {
   try {
     let SQL = 'SELECT * FROM sensor_settings ORDER BY id';
 
-    if (typeof roomNumber !== 'undefined' || roomNumber !== null || roomNumber !== '') {
+    if (
+      typeof roomNumber !== 'undefined' ||
+      roomNumber !== null ||
+      roomNumber !== ''
+    ) {
       SQL = `SELECT * FROM sensor_settings WHERE light_group_number = ${roomNumber} ORDER BY id`;
     }
 
@@ -61,7 +61,10 @@ async function listSensors(req, res, next) {
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     results = await dbClient.query(SQL);
-    serviceHelper.log('trace', 'Release the data store connection back to the pool');
+    serviceHelper.log(
+      'trace',
+      'Release the data store connection back to the pool',
+    );
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
@@ -116,7 +119,11 @@ async function getSensor(req, res, next) {
   let results;
 
   try {
-    if (typeof sensorID === 'undefined' || sensorID === null || sensorID === '') {
+    if (
+      typeof sensorID === 'undefined' ||
+      sensorID === null ||
+      sensorID === ''
+    ) {
       serviceHelper.sendResponse(res, 400, 'Missing param: sensorID');
       next();
       return;
@@ -128,7 +135,10 @@ async function getSensor(req, res, next) {
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensor');
     results = await dbClient.query(SQL);
-    serviceHelper.log('trace', 'Release the data store connection back to the pool');
+    serviceHelper.log(
+      'trace',
+      'Release the data store connection back to the pool',
+    );
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
@@ -180,7 +190,8 @@ async function saveSensors(req, res, next) {
 
   try {
     // Update data in data store
-    const SQL = 'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
+    const SQL =
+      'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
     // eslint-disable-next-line camelcase
     const SQLValues = [id, start_time, end_time, scene, brightness, active];
 
@@ -188,12 +199,18 @@ async function saveSensors(req, res, next) {
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Save sensor');
     results = await dbClient.query(SQL, SQLValues);
-    serviceHelper.log('trace', 'Release the data store connection back to the pool');
+    serviceHelper.log(
+      'trace',
+      'Release the data store connection back to the pool',
+    );
     await dbClient.release(); // Return data store connection back to pool
 
     // Send data back to caler
     if (results.rowCount === 1) {
-      serviceHelper.log('info', `Saved sensor data: ${JSON.stringify(req.body)}`);
+      serviceHelper.log(
+        'info',
+        `Saved sensor data: ${JSON.stringify(req.body)}`,
+      );
       serviceHelper.sendResponse(res, true, 'saved');
     } else {
       serviceHelper.log('error', 'Failed to save data');
