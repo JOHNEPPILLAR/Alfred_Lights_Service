@@ -148,6 +148,7 @@ exports.processData = async (sensor) => {
                 );
                 setTimeout(() => {
                   req = {
+                    params,
                     body: {
                       lightNumber: lightInfo.light_group_number,
                       lightAction: 'off',
