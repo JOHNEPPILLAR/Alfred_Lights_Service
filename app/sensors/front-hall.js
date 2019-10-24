@@ -143,7 +143,7 @@ exports.processData = async (sensor) => {
               if (turnOffLightTimer) {
                 // Schedule to turn off lights after 3 minutes
                 serviceHelper.log(
-                  'trace',
+                  'info',
                   `Setting ${serviceHelper.getLightGroupName(
                     lightInfo.light_group_number,
                   )} lights timer to turn off in 3 minutes`,
@@ -152,7 +152,6 @@ exports.processData = async (sensor) => {
                   req = {
                     params,
                     body: {
-                      lightGroupNumber: lightInfo.light_group_number,
                       lightAction: 'off',
                     },
                   };

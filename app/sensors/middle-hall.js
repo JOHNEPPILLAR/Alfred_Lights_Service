@@ -132,6 +132,7 @@ exports.processData = async (sensor) => {
                     );
                   } catch (err) {
                     serviceHelper.log('error', err.message);
+                    turnOffLightTimer = true;
                   }
               }
 
@@ -141,7 +142,7 @@ exports.processData = async (sensor) => {
               if (turnOffLightTimer) {
                 // Schedule to turn off lights after 3 minutes
                 serviceHelper.log(
-                  'trace',
+                  'info',
                   `Setting ${serviceHelper.getLightName(
                     lightInfo.light_group_number,
                   )} lights timer to turn off in 3 minutes`,
@@ -150,7 +151,6 @@ exports.processData = async (sensor) => {
                   req = {
                     params,
                     body: {
-                      lightNumber: lightInfo.light_group_number,
                       lightAction: 'off',
                     },
                   };
