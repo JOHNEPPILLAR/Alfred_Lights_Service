@@ -1,18 +1,18 @@
 /**
  * Import external libraries
  */
-const serviceHelper = require('alfred_helper');
+const serviceHelper = require('alfred-helper');
 
 /**
  * Import helper libraries
  */
 const lightsHelper = require('../api/lights/lights.js');
-const sensors = require('../sensors/controller.js');
+const lightGroupsHelper = require('../api/lights/light-groups.js');
 
 exports.setup = () => {
   serviceHelper.log('trace', 'Setting up light/light group names');
 
-  Promise.all([lightsHelper.listLights(), lightsHelper.listLightGroups()])
+  Promise.all([lightsHelper.list(), lightGroupsHelper.list()])
     .then(([listLights, listLightGroups]) => {
       // Setup light names
       try {
@@ -30,7 +30,7 @@ exports.setup = () => {
         serviceHelper.log('error', err.message);
       }
 
-      // Setup ligh group names
+      // Setup light group names
       try {
         if (listLightGroups instanceof Error) {
           serviceHelper.log('error', listLightGroups.message);
@@ -45,8 +45,6 @@ exports.setup = () => {
       } catch (err) {
         serviceHelper.log('error', err.message);
       }
-
-      sensors.setup(); // Setup sensors now that we have the names of the lights and light groups
     })
     .catch((err) => {
       serviceHelper.log('error', err.message);

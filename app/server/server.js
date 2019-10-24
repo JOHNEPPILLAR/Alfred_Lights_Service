@@ -3,7 +3,7 @@
  */
 require('dotenv').config();
 
-const serviceHelper = require('alfred_helper');
+const serviceHelper = require('alfred-helper');
 const restify = require('restify');
 const fs = require('fs');
 const UUID = require('pure-uuid');
@@ -12,7 +12,9 @@ const { Pool } = require('pg');
 /**
  * Import helper libraries
  */
-const lightNames = require('./lightNames.js');
+const lightNames = require('../server/light-names.js');
+const sensors = require('../sensors/controller.js');
+const schedules = require('../schedules/controller.js');
 
 global.lightsDataClient = new Pool({
   host: process.env.DataStore,
@@ -22,18 +24,10 @@ global.lightsDataClient = new Pool({
   port: 5432,
 });
 
-global.schedulesDataClient = new Pool({
-  host: process.env.DataStore,
-  database: 'schedules',
-  user: process.env.DataStoreUser,
-  password: process.env.DataStoreUserPassword,
-  port: 5432,
-});
-
-global.instanceTraceID = new UUID(4);
-global.callTraceID = null;
+global.APITraceID = '';
 global.lightNames = [];
 global.lightGroupNames = [];
+global.schedules = [];
 
 /**
  * Restify server Init
@@ -70,9 +64,11 @@ server.use((req, res, next) => {
 });
 server.use((req, res, next) => {
   // Check for a trace id
-  if (typeof req.headers['trace-id'] === 'undefined') {
-    global.callTraceID = new UUID(4);
-  } // Generate new trace id
+  if (typeof req.headers['api-trace-id'] === 'undefined') {
+    global.APITraceID = new UUID(4);
+  } else {
+    global.APITraceID = req.headers['api-trace-id'];
+  }
 
   // Check for valid auth key
   if (req.headers['client-access-key'] !== process.env.ClientAccessKey) {
@@ -103,8 +99,9 @@ server.on('uncaughtException', (req, res, route, err) => {
  * Configure API end points
  */
 require('../api/root/root.js').applyRoutes(server);
-require('../api/lights/lights.js').skill.applyRoutes(server, '/lights');
-require('../api/sensors/sensors.js').applyRoutes(server, '/sensors');
+require('../api/lights/lights.js').skill.applyRoutes(server);
+require('../api/lights/light-groups.js').skill.applyRoutes(server);
+require('../api/sensors/sensors.js').skill.applyRoutes(server);
 
 /**
  * Stop server if process close event is issued
@@ -112,8 +109,15 @@ require('../api/sensors/sensors.js').applyRoutes(server, '/sensors');
 async function cleanExit() {
   serviceHelper.log('warn', 'Service stopping');
   serviceHelper.log('warn', 'Closing the data store pools');
-  await global.lightsDataClient.end();
-  await global.schedulesDataClient.end();
+  try {
+    // await global.lightsDataClient.end();
+    global.lightsDataClient
+      .end()
+      .then(() => serviceHelper.log('trace', 'client has disconnected'))
+      .catch((err) => serviceHelper.log('error', err.stack));
+  } catch (err) {
+    serviceHelper.log('error', err.message);
+  }
   serviceHelper.log('warn', 'Close rest server');
   server.close(() => {
     // Ensure rest server is stopped
@@ -147,19 +151,21 @@ global.lightsDataClient.on('error', (err) => {
   cleanExit();
 });
 
-global.schedulesDataClient.on('error', (err) => {
-  serviceHelper.log(
-    'error',
-    'Schedules data store: Unexpected error on idle client',
-  );
-  serviceHelper.log('error', err.message);
-  cleanExit();
-});
+// Setup monitors and schedules
+async function setupMonitors() {
+  await lightNames.setup();
+  if (process.env.Mock === 'true') {
+    serviceHelper.log('info', 'Mocking enabled, will not setup monitors or schedules');
+  } else {
+    sensors.setup(); // Monitor sensors
+    schedules.setSchedule(true); // Setup light schedules
+  }
+}
 
-// Setup light names
 setTimeout(() => {
-  lightNames.setup();
+  setupMonitors();
 }, 1000);
+
 
 // Start service and listen to requests
 server.listen(process.env.Port, () => {

@@ -1,15 +1,15 @@
 /**
  * Import external libraries
  */
-const serviceHelper = require('alfred_helper');
+const serviceHelper = require('alfred-helper');
 
 /**
  * Import helper libraries
  */
-const lightsHelper = require('../api/lights/lights.js');
-const livingRoomSensor = require('./livingroom.js');
-const frontHallSensor = require('./fronthall.js');
-const middleHallSensor = require('./middlehall.js');
+const sensorHelper = require('../api/sensors/sensors.js');
+const livingRoomSensor = require('../sensors/living-room.js');
+const frontHallSensor = require('../sensors/front-hall.js');
+const middleHallSensor = require('../sensors/middle-hall.js');
 
 const threeSeconds = 3000;
 let timer = 3000;
@@ -25,7 +25,7 @@ async function processSensorData(apiData) {
 async function getSensorData() {
   serviceHelper.log('trace', 'Get sensor data');
   try {
-    const apiData = await lightsHelper.lightMotion();
+    const apiData = await sensorHelper.listSensors();
     processSensorData(apiData);
 
     // Check timer frequency
@@ -33,6 +33,7 @@ async function getSensorData() {
       timer = threeSeconds; // Reset timer to back 3 seconds
       serviceHelper.log('info', `Setting timer to ${timer / 1000} seconds`);
     }
+    return true;
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (timer === threeSeconds) {
@@ -41,21 +42,13 @@ async function getSensorData() {
     }
     return err;
   }
-  return null;
 }
 
-// Setup timer function to run every x seconds
+// Setup timer function to run every few seconds
 function setup() {
   setTimeout(() => {
-    if (process.env.Mock === 'true') {
-      serviceHelper.log(
-        'info',
-        'Mocking enabled. Will not process sensor data',
-      );
-    } else {
-      getSensorData(); // Get data from Hue hub and then process it
-      setup(); // Recursive call back to this function
-    }
+    getSensorData(); // Get data from Hue hub and then process it
+    setup(); // Recursive call back to this function
   }, timer);
 }
 
