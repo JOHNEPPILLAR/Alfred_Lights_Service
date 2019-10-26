@@ -10,14 +10,14 @@ const serviceHelper = require('alfred-helper');
  */
 const lightGroupHelper = require('../api/lights/light-groups.js');
 
-function lightsOn(data) {
+function lightsOff(data) {
   try {
-    serviceHelper.log('info', `Lights on schedule - Turning on ${data.name}`);
+    serviceHelper.log('info', `Lights off schedule - Turning off ${data.name}`);
 
     const req = {
       params: { lightGroupNumber: data.light_group_number },
       body: {
-        lightAction: 'on',
+        lightAction: 'off',
         brightness: data.brightness,
         scene: data.scene,
         colorLoop: data.color_loop,
@@ -26,7 +26,7 @@ function lightsOn(data) {
 
     const updateLights = lightGroupHelper.updateLightGroup(req);
     if (updateLights instanceof Error) {
-      throw new Error(`There was an error turning on light ${data.name}`);
+      throw new Error(`There was an error turning off light ${data.name}`);
     }
     return true;
   } catch (err) {
@@ -38,7 +38,7 @@ function lightsOn(data) {
 async function setupSchedule(data) {
   serviceHelper.log(
     'trace',
-    `Create lights on schedule for ${data.name}`,
+    `Create lights off schedule for ${data.name}`,
   );
 
   if (data.hour === null || data.minute === null) {
@@ -47,24 +47,18 @@ async function setupSchedule(data) {
   }
   let rule = new scheduler.RecurrenceRule();
   if (data.ai_override) {
-    const url = `${process.env.AlfredControllerService}/weather/sunset`;
+    const url = `${process.env.AlfredControllerService}/weather/sunrise`;
     const sunsetData = await serviceHelper.callAlfredServiceGet(url, true);
     if (sunsetData instanceof Error) {
       serviceHelper.log(
         'trace',
-        'Error getting sunset, so setting default override values',
+        'Error getting sunrise, so setting default override values',
       );
       rule.hour = data.hour;
       rule.minute = data.minute;
     } else {
       const sunSet = new Date(`${'01/01/1900 '}${sunsetData.data}`);
       sunSet.setMinutes(sunSet.getMinutes() - 30);
-
-      // If sunset < 5pm then reset to 5pm
-      if (dateFormat(sunSet, 'HH:MM') < '17:00') {
-        sunSet.setHours(17);
-        sunSet.setMinutes(0);
-      }
       rule.hour = sunSet.getHours();
       rule.minute = sunSet.getMinutes();
     }
@@ -73,7 +67,7 @@ async function setupSchedule(data) {
     rule.minute = data.minute;
   }
   const schedule = scheduler.scheduleJob(rule, () => {
-    lightsOn(data);
+    lightsOff(data);
   });
   global.schedules.push(schedule);
   serviceHelper.log(
@@ -88,7 +82,7 @@ async function setupSchedule(data) {
 }
 
 /**
- * Set up lights on schedules
+ * Set up lights off schedules
  */
 exports.setup = async () => {
   let dbClient;
@@ -96,7 +90,7 @@ exports.setup = async () => {
 
   try {
     // Get data from data store
-    const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM vw_lights_on_schedules';
+    const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM light_schedules WHERE type = 2';
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights on timer settings');
@@ -109,7 +103,7 @@ exports.setup = async () => {
 
     if (results.rowCount === 0) {
       // Exit function as no data to process
-      serviceHelper.log('trace', 'No lights on timers are active');
+      serviceHelper.log('trace', 'No lights off timers are active');
       return false;
     }
 

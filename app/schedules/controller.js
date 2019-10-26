@@ -9,6 +9,7 @@ const serviceHelper = require('alfred-helper');
  */
 const allLightsOff = require('./allLightsOff.js');
 const lightsOn = require('./lightsOn.js');
+const lightsOff = require('./lightsOff.js');
 
 /**
  * Setup light and light group names
@@ -23,8 +24,9 @@ function setupSchedules() {
     value.cancel();
   });
 
-  allLightsOff.setup(); // Off timers
+  allLightsOff.setup(); // All off timers
   lightsOn.setup(); // On timers
+  lightsOff.setup(); // Off timers
 }
 
 /**
