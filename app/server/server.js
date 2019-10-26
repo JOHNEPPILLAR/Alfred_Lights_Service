@@ -8,6 +8,7 @@ const restify = require('restify');
 const fs = require('fs');
 const UUID = require('pure-uuid');
 const { Pool } = require('pg');
+const { version } = require('../../package.json');
 
 /**
  * Import helper libraries
@@ -34,7 +35,7 @@ global.schedules = [];
  */
 const server = restify.createServer({
   name: process.env.ServiceName,
-  version: process.env.Version,
+  version,
   key: fs.readFileSync('./certs/server.key'),
   certificate: fs.readFileSync('./certs/server.crt'),
 });
