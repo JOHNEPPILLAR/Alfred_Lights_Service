@@ -1,7 +1,6 @@
 /**
  * Import external libraries
  */
-const dateFormat = require('dateformat');
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
 
