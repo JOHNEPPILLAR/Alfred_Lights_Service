@@ -155,7 +155,7 @@ global.lightsDataClient.on('error', (err) => {
 // Setup monitors and schedules
 async function setupMonitors() {
   await lightNames.setup();
-  if (process.env.Mock === 'true') {
+  if (process.env.Mock === 'true' || process.env.Mock === 'lights') {
     serviceHelper.log('info', 'Mocking enabled, will not setup monitors or schedules');
   } else {
     sensors.setup(); // Monitor sensors
