@@ -58,7 +58,7 @@ async function list(req, res, next) {
     );
 
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     }
     return hueData;
@@ -70,7 +70,7 @@ async function list(req, res, next) {
     serviceHelper.log('trace', 'Remove dimmers etc from data');
     hueData = hueData.filter((o) => o.attributes.attributes.type === 'Room');
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     } else {
       return hueData;
@@ -78,7 +78,7 @@ async function list(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err.message);
+      serviceHelper.sendResponse(res, 500, err.message);
       next();
     } else {
       return err;
@@ -118,7 +118,7 @@ async function lightGroupState(req, res, next) {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const hueData = listLightGroupMock;
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     }
     return hueData;
@@ -128,7 +128,7 @@ async function lightGroupState(req, res, next) {
   try {
     const hueData = await hue.groups.getById(lightGroupNumber);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     } else {
       return hueData;
@@ -136,7 +136,7 @@ async function lightGroupState(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err.message);
+      serviceHelper.sendResponse(res, 500, err.message);
       next();
     } else {
       return err;
@@ -205,7 +205,7 @@ async function updateLightGroup(req, res, next) {
         )} turned ${lightAction}`,
       );
       if (typeof res !== 'undefined' && res !== null) {
-        serviceHelper.sendResponse(res, true, true);
+        serviceHelper.sendResponse(res, 200, true);
         next();
       } else {
         return true;
@@ -216,7 +216,7 @@ async function updateLightGroup(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, false, err);
+      serviceHelper.sendResponse(res, 500, err);
       next();
     } else {
       return err;

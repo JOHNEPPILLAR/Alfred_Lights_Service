@@ -112,7 +112,7 @@ async function lightState(req, res, next) {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const returnJSON = listLightMock;
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, returnJSON);
+      serviceHelper.sendResponse(res, 200, returnJSON);
       next();
     }
     return returnJSON;
@@ -122,7 +122,7 @@ async function lightState(req, res, next) {
   try {
     const hueData = await hue.lights.getById(lightNumber);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     } else {
       return hueData;
@@ -130,7 +130,7 @@ async function lightState(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err.message);
+      serviceHelper.sendResponse(res, 500, err.message);
       next();
     } else {
       return err;
