@@ -78,7 +78,7 @@ async function list(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, 500, err.message);
+      serviceHelper.sendResponse(res, 500, err);
       next();
     } else {
       return err;
@@ -136,7 +136,7 @@ async function lightGroupState(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, 500, err.message);
+      serviceHelper.sendResponse(res, 500, err);
       next();
     } else {
       return err;

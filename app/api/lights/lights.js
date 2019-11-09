@@ -54,7 +54,7 @@ async function list(req, res, next) {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const returnJSON = listLightsMock;
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, returnJSON);
+      serviceHelper.sendResponse(res, 200, returnJSON);
       next();
     }
     return returnJSON;
@@ -64,7 +64,7 @@ async function list(req, res, next) {
   try {
     const hueData = await hue.lights.getAll();
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, true, hueData);
+      serviceHelper.sendResponse(res, 200, hueData);
       next();
     } else {
       return hueData;
@@ -72,7 +72,7 @@ async function list(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err.message);
+      serviceHelper.sendResponse(res, 500, err);
       next();
     } else {
       return err;
@@ -197,7 +197,7 @@ async function updateLight(req, res, next) {
         )} turned ${lightAction}`,
       );
       if (typeof res !== 'undefined' && res !== null) {
-        serviceHelper.sendResponse(res, true, true);
+        serviceHelper.sendResponse(res, 200, true);
         next();
       } else {
         return true;
@@ -208,7 +208,7 @@ async function updateLight(req, res, next) {
   } catch (err) {
     serviceHelper.log('error', err.message);
     if (typeof res !== 'undefined' && res !== null) {
-      serviceHelper.sendResponse(res, null, err);
+      serviceHelper.sendResponse(res, 500, err);
       next();
     } else {
       return err;
