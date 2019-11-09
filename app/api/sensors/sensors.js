@@ -147,7 +147,7 @@ async function listSensorsTimers(req, res, next) {
   }
   return true;
 }
-skill.get('/sensors/timers', listSensorsTimers);
+skill.get('/sensors/schedules', listSensorsTimers);
 
 /**
  * @api {get} /sensors/timers List sensor timer
@@ -208,7 +208,7 @@ async function listSensorTimer(req, res, next) {
   }
   return true;
 }
-skill.get('/sensors/timers/:sensorID', listSensorTimer);
+skill.get('/sensors/schedules/:sensorID', listSensorTimer);
 
 /**
  * @api {get} /sensors/timers/rooms List all sensor timers for a given room
@@ -269,21 +269,17 @@ async function listSensorTimersRoom(req, res, next) {
   }
   return true;
 }
-skill.get('/sensors/timers/rooms/:roomNumber', listSensorTimersRoom);
-
-// TODO
+skill.get('/sensors/schedules/rooms/:roomNumber', listSensorTimersRoom);
 
 /**
- * @api {put} /sensors/save save schedule
+ * @api {put} /sensors/schedules/:sensorID save sensor schedule
  * @apiName save
  * @apiGroup Sensors
  *
  * @apiSuccessExample {json} Success-Response:
  *   HTTPS/1.1 200 OK
  *   {
- *      "data": {
- *       "saved": "true"
- *      }
+ *      "data": { saved }
  *   }
  *
  * @apiErrorExample {json} Error-Response:
@@ -296,28 +292,53 @@ skill.get('/sensors/timers/rooms/:roomNumber', listSensorTimersRoom);
 async function saveSensors(req, res, next) {
   serviceHelper.log('trace', 'Save Schedule API called');
 
+  serviceHelper.log('trace', `Params: ${JSON.stringify(req.params)}`);
+  serviceHelper.log('trace', `Body: ${JSON.stringify(req.body)}`);
+
   let dbClient;
   let results;
+
+  const { sensorID } = req.params;
   const {
-    id,
     // eslint-disable-next-line camelcase
     start_time,
     // eslint-disable-next-line camelcase
     end_time,
-    scene,
+    // eslint-disable-next-line camelcase
+    light_group_number,
+    // eslint-disable-next-line camelcase
+    light_action,
     brightness,
     active,
+    // eslint-disable-next-line camelcase
+    turn_off,
+    scene,
   } = req.body;
 
   try {
     // Update data in data store
-    const SQL = 'UPDATE sensor_settings SET start_time = $2, end_time = $3, scene = $4, brightness = $5, active = $6 WHERE id = $1';
+    const SQL = 'UPDATE sensor_schedules SET start_time = $2, end_time = $3, light_group_number = $4, light_action = $5, brightness = $6, active = $7, turn_off = $8, scene = $9 WHERE id = $1';
     // eslint-disable-next-line camelcase
-    const SQLValues = [id, start_time, end_time, scene, brightness, active];
+    const SQLValues = [
+      sensorID,
+      // eslint-disable-next-line camelcase
+      start_time,
+      // eslint-disable-next-line camelcase
+      end_time,
+      // eslint-disable-next-line camelcase
+      light_group_number,
+      // eslint-disable-next-line camelcase
+      light_action,
+      brightness,
+      active,
+      // eslint-disable-next-line camelcase
+      turn_off,
+      scene,
+    ];
 
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
-    serviceHelper.log('trace', 'Save sensor');
+    serviceHelper.log('trace', 'Save sensor schedule');
     results = await dbClient.query(SQL, SQLValues);
     serviceHelper.log(
       'trace',
@@ -331,20 +352,20 @@ async function saveSensors(req, res, next) {
         'info',
         `Saved sensor data: ${JSON.stringify(req.body)}`,
       );
-      serviceHelper.sendResponse(res, true, 'saved');
+      serviceHelper.sendResponse(res, 200, 'saved');
     } else {
       serviceHelper.log('error', 'Failed to save data');
-      serviceHelper.sendResponse(res, false, 'failed to save');
+      serviceHelper.sendResponse(res, 500, 'failed to save');
     }
     next();
   } catch (err) {
     serviceHelper.log('error', err.message);
-    serviceHelper.sendResponse(res, false, 'failed to save');
+    serviceHelper.sendResponse(res, 500, err);
     next();
   }
   return true;
 }
-skill.put('/save', saveSensors);
+skill.put('/sensors/schedules/:sensorID', saveSensors);
 
 module.exports = {
   skill,
