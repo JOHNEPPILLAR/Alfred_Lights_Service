@@ -74,7 +74,7 @@ exports.setup = async () => {
 
     if (results.rowCount === 0) {
       // Exit function as no data to process
-      serviceHelper.log('trace', 'No lights off schedules are active');
+      serviceHelper.log('info', 'No lights off schedules are active');
       return false;
     }
 

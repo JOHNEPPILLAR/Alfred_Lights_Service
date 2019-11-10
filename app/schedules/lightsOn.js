@@ -109,7 +109,7 @@ exports.setup = async () => {
 
     if (results.rowCount === 0) {
       // Exit function as no data to process
-      serviceHelper.log('trace', 'No lights on timers are active');
+      serviceHelper.log('info', 'No lights on timers are active');
       return false;
     }
 
