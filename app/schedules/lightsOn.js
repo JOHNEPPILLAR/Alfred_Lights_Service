@@ -52,7 +52,7 @@ async function setupSchedule(data) {
     if (sunsetData instanceof Error) {
       serviceHelper.log(
         'error',
-        'Error getting sunset, so setting default override values',
+        sunsetData.message,
       );
       rule.hour = data.hour;
       rule.minute = data.minute;
