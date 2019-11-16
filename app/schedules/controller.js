@@ -1,7 +1,7 @@
 /**
  * Import external libraries
  */
-const schedule = require('node-schedule');
+const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
 
 /**
@@ -32,15 +32,22 @@ function setupSchedules() {
 /**
  * Set up the schedules
  */
-exports.setSchedule = (runNow) => {
+exports.setSchedule = async (runNow) => {
   if (runNow) {
-    setupSchedules();
+    await setupSchedules();
   }
   // Set schedules each day to keep in sync with sunset changes
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = 12;
+  const rule = new scheduler.RecurrenceRule();
+  rule.hour = 3;
   rule.minute = 5;
-  schedule.scheduleJob(rule, () => {
+  scheduler.scheduleJob(rule, () => {
     setupSchedules();
   }); // Set the schedule
+  serviceHelper.log(
+    'info',
+    `Reset schedules will run at: ${serviceHelper.zeroFill(
+      rule.hour,
+      2,
+    )}:${serviceHelper.zeroFill(rule.minute, 2)}`,
+  );
 };
