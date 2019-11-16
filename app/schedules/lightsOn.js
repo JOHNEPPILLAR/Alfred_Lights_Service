@@ -51,7 +51,7 @@ async function setupSchedule(data) {
     const sunsetData = await serviceHelper.callAlfredServiceGet(url, true);
     if (sunsetData instanceof Error) {
       serviceHelper.log(
-        'trace',
+        'error',
         'Error getting sunset, so setting default override values',
       );
       rule.hour = data.hour;
