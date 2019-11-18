@@ -14,7 +14,7 @@ const lightsOff = require('./lightsOff.js');
 /**
  * Setup light and light group names
  */
-function setupSchedules() {
+async function setupSchedules() {
   // Cancel any existing schedules
   serviceHelper.log(
     'trace',
@@ -24,18 +24,17 @@ function setupSchedules() {
     value.cancel();
   });
 
-  allLightsOff.setup(); // All off schedules
-  lightsOn.setup(); // On schedules
-  lightsOff.setup(); // Off schedules
+  await allLightsOff.setup(); // All off schedules
+  await lightsOff.setup(); // Off schedules
+  await lightsOn.setup(); // On schedules
 }
 
 /**
  * Set up the schedules
  */
-exports.setSchedule = async (runNow) => {
-  if (runNow) {
-    await setupSchedules();
-  }
+exports.setSchedule = (runNow) => {
+  if (runNow) setupSchedules();
+
   // Set schedules each day to keep in sync with sunset changes
   const rule = new scheduler.RecurrenceRule();
   rule.hour = 3;

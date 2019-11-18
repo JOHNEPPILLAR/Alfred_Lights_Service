@@ -6,6 +6,11 @@ const Skills = require('restify-router').Router;
 const serviceHelper = require('alfred-helper');
 
 /**
+ * Import helper libraries
+ */
+const schedules = require('../../schedules/controller.js');
+
+/**
  * Import mocks
  */
 const motionMock = require('../../mock/motion.json');
@@ -352,6 +357,10 @@ async function saveSensors(req, res, next) {
         'info',
         `Saved sensor data: ${JSON.stringify(req.body)}`,
       );
+
+      serviceHelper.log('info', 'Reseting schedules');
+      await schedules.setSchedule(true); // re-set light schedules
+
       serviceHelper.sendResponse(res, 200, 'saved');
     } else {
       serviceHelper.log('error', 'Failed to save data');

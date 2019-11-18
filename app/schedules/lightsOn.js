@@ -4,6 +4,7 @@
 const dateFormat = require('dateformat');
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const async = require('async');
 
 /**
  * Import helper libraries
@@ -113,9 +114,9 @@ exports.setup = async () => {
       return false;
     }
 
-    // Setup timers
-    results.rows.forEach((info) => {
-      setupSchedule(info);
+    // Setup schedules
+    async.eachSeries(results.rows, async (info) => {
+      await setupSchedule(info);
     });
     return true;
   } catch (err) {

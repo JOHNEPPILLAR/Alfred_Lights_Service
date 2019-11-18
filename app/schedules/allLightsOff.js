@@ -3,6 +3,7 @@
  */
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const async = require('async');
 
 /**
  * Import helper libraries
@@ -79,7 +80,7 @@ exports.setup = async () => {
     }
 
     // Setup schedules
-    results.rows.forEach((info) => {
+    async.eachSeries(results.rows, async (info) => {
       setupSchedule(info);
     });
     return true;

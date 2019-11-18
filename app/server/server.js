@@ -158,8 +158,8 @@ async function setupMonitors() {
   if (process.env.Mock === 'true' || process.env.Mock === 'lights') {
     serviceHelper.log('info', 'Mocking enabled, will not setup monitors or schedules');
   } else {
-    sensors.setup(); // Monitor sensors
-    schedules.setSchedule(true); // Setup light schedules
+    await sensors.setup(); // Monitor sensors
+    await schedules.setSchedule(true); // Setup light schedules
   }
 }
 

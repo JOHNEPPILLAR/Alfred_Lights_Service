@@ -3,6 +3,7 @@
  */
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const async = require('async');
 
 /**
  * Import helper libraries
@@ -46,6 +47,7 @@ async function setupSchedule(data) {
   }
   let rule = new scheduler.RecurrenceRule();
   if (data.ai_override) {
+    serviceHelper.log('trace', 'AI override active');
     const url = `${process.env.AlfredControllerService}/weather/sunrise`;
     const sunsetData = await serviceHelper.callAlfredServiceGet(url, true);
     if (sunsetData instanceof Error) {
@@ -62,6 +64,7 @@ async function setupSchedule(data) {
       rule.minute = sunSet.getMinutes();
     }
   } else {
+    serviceHelper.log('trace', 'AI override not active');
     rule.hour = data.hour;
     rule.minute = data.minute;
   }
@@ -92,7 +95,7 @@ exports.setup = async () => {
     const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM light_schedules WHERE type = 2';
     serviceHelper.log('trace', 'Connect to data store connection pool');
     dbClient = await global.lightsDataClient.connect(); // Connect to data store
-    serviceHelper.log('trace', 'Get lights on timer settings');
+    serviceHelper.log('trace', 'Get lights off timer settings');
     results = await dbClient.query(SQL);
     serviceHelper.log(
       'trace',
@@ -106,9 +109,9 @@ exports.setup = async () => {
       return false;
     }
 
-    // Setup timers
-    results.rows.forEach((info) => {
-      setupSchedule(info);
+    // Setup schedules
+    async.eachSeries(results.rows, async (info) => {
+      await setupSchedule(info);
     });
     return true;
   } catch (err) {
