@@ -6,11 +6,6 @@ const Skills = require('restify-router').Router;
 const serviceHelper = require('alfred-helper');
 
 /**
- * Import helper libraries
- */
-const schedules = require('../../schedules/controller.js');
-
-/**
  * Import mocks
  */
 const motionMock = require('../../mock/motion.json');
@@ -155,8 +150,8 @@ async function listSensorsTimers(req, res, next) {
 skill.get('/sensors/schedules', listSensorsTimers);
 
 /**
- * @api {get} /sensors/timers List sensor timer
- * @apiName timers
+ * @api {get} /sensors/schedule List sensor schedule
+ * @apiName schedule
  * @apiGroup Sensors
  *
  * @apiSuccessExample {json} Success-Response:
@@ -174,8 +169,7 @@ skill.get('/sensors/schedules', listSensorsTimers);
  *           "active": true,
  *           "turn_off": "TRUE",
  *           "scene": 3
- *       },
- *       ...
+ *       }
  *      ]
  *   }
  *
@@ -186,8 +180,8 @@ skill.get('/sensors/schedules', listSensorsTimers);
  *   }
  *
  */
-async function listSensorTimer(req, res, next) {
-  serviceHelper.log('trace', 'View sensor timer API called');
+async function listSensorSchedule(req, res, next) {
+  serviceHelper.log('trace', 'View sensor schedule API called');
 
   const { sensorID } = req.params;
 
@@ -213,10 +207,10 @@ async function listSensorTimer(req, res, next) {
   }
   return true;
 }
-skill.get('/sensors/schedules/:sensorID', listSensorTimer);
+skill.get('/sensors/schedules/:sensorID', listSensorSchedule);
 
 /**
- * @api {get} /sensors/timers/rooms List all sensor timers for a given room
+ * @api {get} /sensors/schedules/rooms List all sensor schedules for a given room
  * @apiName rooms
  * @apiGroup Sensors
  *
@@ -247,8 +241,8 @@ skill.get('/sensors/schedules/:sensorID', listSensorTimer);
  *   }
  *
  */
-async function listSensorTimersRoom(req, res, next) {
-  serviceHelper.log('trace', 'List sensor timers for a given room API called');
+async function listSensorSchedulesRoom(req, res, next) {
+  serviceHelper.log('trace', 'List sensor schedules for a given room API called');
 
   const { roomNumber } = req.params;
 
@@ -274,7 +268,7 @@ async function listSensorTimersRoom(req, res, next) {
   }
   return true;
 }
-skill.get('/sensors/schedules/rooms/:roomNumber', listSensorTimersRoom);
+skill.get('/sensors/schedules/rooms/:roomNumber', listSensorSchedulesRoom);
 
 /**
  * @api {put} /sensors/schedules/:sensorID save sensor schedule
@@ -357,9 +351,6 @@ async function saveSensors(req, res, next) {
         'info',
         `Saved sensor data: ${JSON.stringify(req.body)}`,
       );
-
-      serviceHelper.log('info', 'Reseting schedules');
-      await schedules.setSchedule(true); // re-set light schedules
 
       serviceHelper.sendResponse(res, 200, 'saved');
     } else {

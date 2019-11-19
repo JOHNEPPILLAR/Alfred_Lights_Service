@@ -103,6 +103,7 @@ require('../api/root/root.js').applyRoutes(server);
 require('../api/lights/lights.js').skill.applyRoutes(server);
 require('../api/lights/light-groups.js').skill.applyRoutes(server);
 require('../api/sensors/sensors.js').skill.applyRoutes(server);
+require('../api/schedules/schedules.js').applyRoutes(server);
 
 /**
  * Stop server if process close event is issued
