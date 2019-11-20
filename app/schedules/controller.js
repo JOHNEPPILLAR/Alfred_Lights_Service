@@ -35,11 +35,12 @@ async function setupSchedules() {
 exports.setSchedule = (runNow) => {
   if (runNow) setupSchedules();
 
-  // Set schedules each day to keep in sync with sunset changes
+  // Set schedules each day to keep in sync with sunrise & sunset changes
   const rule = new scheduler.RecurrenceRule();
   rule.hour = 3;
   rule.minute = 5;
   scheduler.scheduleJob(rule, () => {
+    serviceHelper.log('info', 'Resetting daily schedules to keep in sync with sunrise & sunset changes');
     setupSchedules();
   }); // Set the schedule
   serviceHelper.log(
