@@ -44,7 +44,7 @@ async function getSensorData() {
   }
 }
 
-// Setup timer function to run every few seconds
+// Setup schedule function to run every few seconds
 function setup() {
   setTimeout(() => {
     getSensorData(); // Get data from Hue hub and then process it

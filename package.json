@@ -20,8 +20,8 @@
     "fs": "^0.0.2",
     "huejay": "^1.9.0",
     "path": "^0.12.7",
-    "pg": "^7.13.0",
-    "pino": "^5.13.6",
+    "pg": "^7.14.0",
+    "pino": "^5.14.0",
     "pino-pretty": "^3.4.0",
     "pure-uuid": "^1.5.7",
     "request": "^2.88.0",
@@ -32,9 +32,9 @@
     "async": "^3.1.0"
   },
   "devDependencies": {
-    "eslint": "^6.6.0",
+    "eslint": "^6.7.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "snyk": "^1.249.0"
+    "snyk": "^1.251.0"
   }
 }

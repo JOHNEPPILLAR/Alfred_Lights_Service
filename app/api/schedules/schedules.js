@@ -234,4 +234,40 @@ async function saveSchedule(req, res, next) {
 }
 skill.put('/schedules/:scheduleID', saveSchedule);
 
+/**
+ * @api {get} /schedules Display in memory schedules
+ * @apiName schedules
+ * @apiGroup Schedules
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTPS/1.1 200 OK
+ *   {
+ *      data: [
+ *       {
+ *           "name": "<Anonymous Job 1>"
+ *       },
+ * 
+ *   }
+ *
+ * @apiErrorExample {json} Error-Response:
+ *   HTTPS/1.1 500 Internal error
+ *   {
+ *     data: Error message
+ *   }
+ *
+ */
+async function globalSchedule(req, res, next) {
+  serviceHelper.log('trace', 'Display in memory schedules');
+
+  const returnData = []; 
+
+  global.schedules.forEach((value) => {
+    returnData.push({ name: value.name });
+  });
+
+  serviceHelper.sendResponse(res, 200, returnData);
+  next();
+}
+skill.get('/schedules', globalSchedule);
+
 module.exports = skill;
