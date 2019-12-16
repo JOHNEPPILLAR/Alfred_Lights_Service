@@ -26,7 +26,10 @@ jobs:
           CI: true
 
       - name: Create CA cert folder
-        run: sudo mkdir /usr/local/share/ca-certificates/${{ secrets.DOCKER_REGISTERY_URL }}
+        run: |
+          sudo mkdir /usr/local/share/ca-certificates/${{ secrets.DOCKER_REGISTERY_URL }}
+          sudo echo "${{ secrets.DOCKER_CERT }}" > /usr/local/share/ca-certificates/${{ secrets.DOCKER_REGISTERY_URL }}/ca.crt
+          sudo update-ca-certificates
 
       - name: Login to docker registery
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTERY_URL }} -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin 
