@@ -15,7 +15,6 @@ jobs:
   node:
     runs-on: ubuntu-latest
     steps:
-      if: success()
       - uses: actions/checkout@v1
       - name: NPM Install
         uses: actions/setup-node@v1
@@ -28,7 +27,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      if: success()  
       - name: Build docker image
       - uses: actions/checkout@v1
         env:
