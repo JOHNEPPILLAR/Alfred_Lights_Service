@@ -26,7 +26,7 @@ jobs:
           CI: true
 
       - name: Login to docker registery
-        uses: azure/docker-login@master
+        uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.DOCKER_REGISTERY_URL }}
           username: ${{ secrets.DOCKER_USERNAME }}
