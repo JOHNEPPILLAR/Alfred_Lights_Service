@@ -57,14 +57,14 @@ function setupSchedule(data) {
  * Set up lights off schedu;e
  */
 exports.setup = async () => {
-  let dbClient;
   let results;
 
   try {
     // Get data from data store
     const SQL = 'SELECT name, hour, minute FROM light_schedules WHERE type = 0 AND active AND light_group_number = 0';
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights off schedule settings');
     results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -72,6 +72,7 @@ exports.setup = async () => {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     if (results.rowCount === 0) {
       // Exit function as no data to process

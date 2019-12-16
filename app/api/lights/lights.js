@@ -1,7 +1,6 @@
 /**
  * Import external libraries
  */
-const hueBridge = require('huejay');
 const Skills = require('restify-router').Router;
 const serviceHelper = require('alfred-helper');
 
@@ -12,14 +11,6 @@ const listLightsMock = require('../../mock/listLights.json');
 const listLightMock = require('../../mock/listLight.json');
 
 const skill = new Skills();
-
-// Setup Hue bridge
-const { HueBridgeIP, HueBridgeUser } = process.env;
-const hue = new hueBridge.Client({
-  host: HueBridgeIP,
-  username: HueBridgeUser,
-  timeout: 15000, // Optional, timeout in milliseconds (15000 is the default)
-});
 
 /**
  * Light api's
@@ -50,7 +41,7 @@ async function list(req, res, next) {
   serviceHelper.log('trace', 'list all lights API called');
 
   // Mock
-  if (process.env.Mock === 'true') {
+  if (process.env.MOCK === 'true') {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const returnJSON = listLightsMock;
     if (typeof res !== 'undefined' && res !== null) {
@@ -62,7 +53,7 @@ async function list(req, res, next) {
 
   // Non mock
   try {
-    const hueData = await hue.lights.getAll();
+    const hueData = await global.hue.lights.getAll();
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, 200, hueData);
       next();
@@ -108,7 +99,7 @@ async function lightState(req, res, next) {
   const { lightNumber } = req.params;
 
   // Mock
-  if (process.env.Mock === 'true') {
+  if (process.env.MOCK === 'true') {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const returnJSON = listLightMock;
     if (typeof res !== 'undefined' && res !== null) {
@@ -120,7 +111,7 @@ async function lightState(req, res, next) {
 
   // Non mock
   try {
-    const hueData = await hue.lights.getById(lightNumber);
+    const hueData = await global.hue.lights.getById(lightNumber);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, 200, hueData);
       next();
@@ -175,7 +166,7 @@ async function updateLight(req, res, next) {
   } = req.body;
 
   try {
-    const hueData = await hue.lights.getById(lightNumber);
+    const hueData = await global.hue.lights.getById(lightNumber);
     hueData.on = false;
     if (lightAction === 'on') hueData.on = true;
     if (typeof brightness !== 'undefined' && brightness != null) hueData.brightness = brightness;
@@ -188,7 +179,7 @@ async function updateLight(req, res, next) {
       'trace',
       `Saving light ${serviceHelper.getLightName(lightNumber)} state`,
     );
-    const saved = await hue.lights.save(hueData);
+    const saved = await global.hue.lights.save(hueData);
     if (saved) {
       serviceHelper.log(
         'info',

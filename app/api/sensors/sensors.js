@@ -13,12 +13,17 @@ const motionMock = require('../../mock/motion.json');
 const skill = new Skills();
 
 // Setup Hue bridge
-const { HueBridgeIP, HueBridgeUser } = process.env;
-const hue = new hueBridge.Client({
-  host: HueBridgeIP,
-  username: HueBridgeUser,
-  timeout: 15000, // Optional, timeout in milliseconds (15000 is the default)
-});
+let hue;
+async function setupBridgeConnection() {
+  const HueBridgeIP = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, 'HueBridgeIP');
+  const HueBridgeUser = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, 'HueBridgeUser');
+  hue = new hueBridge.Client({
+    host: HueBridgeIP,
+    username: HueBridgeUser,
+    timeout: 15000, // Optional, timeout in milliseconds (15000 is the default)
+  });
+}
+setupBridgeConnection();
 
 /**
  * Hue sensor api's
@@ -49,7 +54,7 @@ async function listSensors(req, res, next) {
   serviceHelper.log('trace', 'list all motion sensors API called');
 
   // Mock
-  if (process.env.Mock === 'true') {
+  if (process.env.MOCK === 'true') {
     serviceHelper.log('trace', 'Mock mode enabled');
     const returnJSON = motionMock;
     serviceHelper.log('trace', 'Return Mock');
@@ -128,7 +133,8 @@ async function listSensorsTimers(req, res, next) {
   try {
     const SQL = 'SELECT * FROM sensor_schedules ORDER BY id';
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -136,6 +142,7 @@ async function listSensorsTimers(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -188,7 +195,8 @@ async function listSensorSchedule(req, res, next) {
   try {
     const SQL = `SELECT * FROM sensor_schedules WHERE id = ${sensorID}`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -196,6 +204,7 @@ async function listSensorSchedule(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -249,7 +258,8 @@ async function listSensorSchedulesRoom(req, res, next) {
   try {
     const SQL = `SELECT * FROM sensor_schedules WHERE light_group_number = ${roomNumber} ORDER BY id`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -257,6 +267,7 @@ async function listSensorSchedulesRoom(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -294,7 +305,6 @@ async function saveSensors(req, res, next) {
   serviceHelper.log('trace', `Params: ${JSON.stringify(req.params)}`);
   serviceHelper.log('trace', `Body: ${JSON.stringify(req.body)}`);
 
-  let dbClient;
   let results;
 
   const { sensorID } = req.params;
@@ -336,7 +346,8 @@ async function saveSensors(req, res, next) {
     ];
 
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Save sensor schedule');
     results = await dbClient.query(SQL, SQLValues);
     serviceHelper.log(
@@ -344,6 +355,7 @@ async function saveSensors(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     if (results.rowCount === 1) {

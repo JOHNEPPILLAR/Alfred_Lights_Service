@@ -6,10 +6,14 @@ services:
     image: alfred_lights_service:latest
     container_name: alfred_lights_service
     restart: always
-    hostname: alfred_lights_service
     networks:
       - alfred
     command: npm run prod
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - MOCK=${MOCK}
+      - VAULT_URL=${VAULT_URL}
+      - VAULT_TOKEN=${VAULT_TOKEN}
 
 networks:
   alfred:

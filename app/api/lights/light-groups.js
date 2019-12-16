@@ -1,7 +1,6 @@
 /**
  * Import external libraries
  */
-const hueBridge = require('huejay');
 const Skills = require('restify-router').Router;
 const serviceHelper = require('alfred-helper');
 
@@ -12,14 +11,6 @@ const listLightGroupsMock = require('../../mock/listLightGroups.json');
 const listLightGroupMock = require('../../mock/listLightGroup.json');
 
 const skill = new Skills();
-
-// Setup Hue bridge
-const { HueBridgeIP, HueBridgeUser } = process.env;
-const hue = new hueBridge.Client({
-  host: HueBridgeIP,
-  username: HueBridgeUser,
-  timeout: 15000, // Optional, timeout in milliseconds (15000 is the default)
-});
 
 /**
  * Light api's
@@ -50,7 +41,7 @@ async function list(req, res, next) {
   serviceHelper.log('trace', 'list all light groups API called');
 
   // Mock
-  if (process.env.Mock === 'true') {
+  if (process.env.MOCK === 'true') {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     let hueData = listLightGroupsMock;
     hueData = hueData.filter(
@@ -66,7 +57,7 @@ async function list(req, res, next) {
 
   // Non mock
   try {
-    let hueData = await hue.groups.getAll();
+    let hueData = await global.hue.groups.getAll();
     serviceHelper.log('trace', 'Remove dimmers etc from data');
     hueData = hueData.filter((o) => o.attributes.attributes.type === 'Room');
     if (typeof res !== 'undefined' && res !== null) {
@@ -114,7 +105,7 @@ async function lightGroupState(req, res, next) {
   const { lightGroupNumber } = req.params;
 
   // Mock
-  if (process.env.Mock === 'true') {
+  if (process.env.MOCK === 'true') {
     serviceHelper.log('trace', 'Mock mode enabled, returning mock');
     const hueData = listLightGroupMock;
     if (typeof res !== 'undefined' && res !== null) {
@@ -126,7 +117,7 @@ async function lightGroupState(req, res, next) {
 
   // Non mock
   try {
-    const hueData = await hue.groups.getById(lightGroupNumber);
+    const hueData = await global.hue.groups.getById(lightGroupNumber);
     if (typeof res !== 'undefined' && res !== null) {
       serviceHelper.sendResponse(res, 200, hueData);
       next();
@@ -181,7 +172,7 @@ async function updateLightGroup(req, res, next) {
   } = req.body;
 
   try {
-    const hueData = await hue.groups.getById(lightGroupNumber);
+    const hueData = await global.hue.groups.getById(lightGroupNumber);
     hueData.on = false;
     if (lightAction === 'on') hueData.on = true;
     if (typeof brightness !== 'undefined' && brightness != null) hueData.brightness = brightness;
@@ -196,7 +187,7 @@ async function updateLightGroup(req, res, next) {
         lightGroupNumber,
       )} state`,
     );
-    const saved = await hue.groups.save(hueData);
+    const saved = await global.hue.groups.save(hueData);
     if (saved) {
       serviceHelper.log(
         'info',

@@ -48,7 +48,8 @@ async function setupSchedule(data) {
   }
   let rule = new scheduler.RecurrenceRule();
   if (data.ai_override) {
-    const url = `${process.env.AlfredControllerService}/weather/sunset`;
+    const AlfredControllerService = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, 'AlfredControllerService');
+    const url = `${AlfredControllerService}/weather/sunset`;
     const sunsetData = await serviceHelper.callAlfredServiceGet(url, true);
     if (sunsetData instanceof Error) {
       serviceHelper.log(
@@ -92,14 +93,14 @@ async function setupSchedule(data) {
  * Set up lights on schedules
  */
 exports.setup = async () => {
-  let dbClient;
   let results;
 
   try {
     // Get data from data store
     const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM vw_lights_on_schedules';
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights on timer settings');
     results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -107,6 +108,7 @@ exports.setup = async () => {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     if (results.rowCount === 0) {
       // Exit function as no data to process

@@ -1,0 +1,31 @@
+name: CI
+
+on: [push]
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run Snyk to check for vulnerabilities
+    - uses: actions/checkout@master
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      if: success()
+    - name: NPM Install
+      uses: actions/setup-node@v1
+      with:
+        node-version: '13.x'
+      run: npm ci
+      env:
+        CI: true
+    if: success()
+    - name: Build the image
+    - uses: actions/checkout@v1
+    - name: Build the image
+      run: docker-compose build
+      env:
+        ENVIRONMENT: production
+        MOCK: "false"
+        VAULT_URL: ${{ secrets.VAULT_URL }}
+        VAULT_TOKEN=: ${{ secrets.VAULT_TOKEN= }}

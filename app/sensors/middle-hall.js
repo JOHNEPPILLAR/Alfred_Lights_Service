@@ -15,7 +15,8 @@ async function checkOffTimerIsActive(timerID) {
   try {
     const SQL = `SELECT name FROM light_schedules WHERE id = ${timerID} AND active`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get list of active services');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -23,6 +24,7 @@ async function checkOffTimerIsActive(timerID) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     if (results.rowCount === 0) active = false;
     return active;
@@ -69,13 +71,13 @@ exports.processData = async (sensor) => {
       if (!lightstate.state.attributes.any_on) {
         let body;
         let turnOffLightTimer = false;
-        let dbClient;
         let results;
 
         try {
           const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_schedules WHERE active AND sensor_id = 3';
           serviceHelper.log('trace', 'Connect to data store connection pool');
-          dbClient = await global.lightsDataClient.connect(); // Connect to data store
+          const dbConnection = await serviceHelper.connectToDB('lights');
+          const dbClient = await dbConnection.connect(); // Connect to data store
           serviceHelper.log('trace', 'Get list of active services');
           results = await dbClient.query(SQL);
           serviceHelper.log(
@@ -83,6 +85,7 @@ exports.processData = async (sensor) => {
             'Release the data store connection back to the pool',
           );
           await dbClient.release(); // Return data store connection back to pool
+          await dbClient.end(); // Close data store connection
 
           if (results.rowCount === 0) {
             serviceHelper.log('trace', 'No active light sensor settings');
