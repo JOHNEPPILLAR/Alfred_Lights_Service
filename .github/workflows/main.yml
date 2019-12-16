@@ -27,7 +27,7 @@ jobs:
 
       - name: Create CA cert folder
         run: |
-          sudo echo { "insecure-registries": ["${{ secrets.DOCKER_REGISTERY_URL }}"] } > /etc/docker/daemon.json
+          echo "{ \"insecure-registries\": [\"${{ secrets.DOCKER_REGISTERY_URL }}\"] }" | sudo tee /etc/docker/daemon.json
           sudo cat /etc/docker/daemon.json
 
       - name: Login to docker registery
