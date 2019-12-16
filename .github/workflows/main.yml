@@ -15,7 +15,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - uses: actions/checkout@master
-      - name: Get Node
+      - name: Install  Node
         uses: actions/setup-node@v1
         with:
           node-version: '13.x'    
@@ -25,10 +25,16 @@ jobs:
         env:
           CI: true
 
-      - name: Build and publish docker container to registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+      - name: Build & push docker container to registry
+        uses: azure/docker-login@v1
         with:
-          name: alfred_lights_service
-          registry: ${{ secrets.DOCKER_REGISTERY_URL }}
+          login-server: ${{ secrets.DOCKER_REGISTERY_URL }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+       # - run: |
+       #   docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
+       #   docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
+       # env:
+       #   CI: true
+  
