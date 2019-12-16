@@ -21,6 +21,6 @@ jobs:
           node-version: '13.x'    
       
       - name: NPM Install
-      run: npm ci
-      env:
-        CI: true
+        run: npm ci
+        env:
+          CI: true
