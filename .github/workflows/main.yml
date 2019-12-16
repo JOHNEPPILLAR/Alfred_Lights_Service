@@ -26,7 +26,7 @@ jobs:
           CI: true
 
       - name: Login to docker registery
-        run: docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ${{ secrets.DOCKER_REGISTERY_URL }}
+        run: docker --insecure-registry=${{ secrets.DOCKER_REGISTERY_URL }} login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ${{ secrets.DOCKER_REGISTERY_URL }}
   
       - name: Build & push docker container to registry
         run: |
