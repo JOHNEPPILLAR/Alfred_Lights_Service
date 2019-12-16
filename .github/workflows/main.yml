@@ -25,14 +25,15 @@ jobs:
         env:
           CI: true
 
-      - name: Build & push docker container to registry
-      - uses: azure/docker-login@master
+      - name: Login to docker registery
+        uses: azure/docker-login@master
         with:
           login-server: ${{ secrets.DOCKER_REGISTERY_URL }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - run: |
+      - name: Build & push docker container to registry
+        run: |
           docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
           docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
   
