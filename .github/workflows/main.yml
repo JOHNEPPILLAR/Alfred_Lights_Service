@@ -11,7 +11,6 @@ jobs:
       uses: snyk/actions/node@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      if: success()
     - name: NPM Install
       uses: actions/setup-node@v1
       with:
@@ -19,7 +18,6 @@ jobs:
       run: npm ci
       env:
         CI: true
-    if: success()
     - name: Build the image
     - uses: actions/checkout@v1
     - name: Build the image
