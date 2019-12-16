@@ -24,3 +24,11 @@ jobs:
         run: npm install
         env:
           CI: true
+
+      - name: Build and publish docker container to registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: alfred_lights_service
+          registry: ${{ secrets.DOCKER_REGISTERY_URL }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
