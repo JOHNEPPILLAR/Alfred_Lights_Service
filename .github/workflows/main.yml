@@ -3,27 +3,37 @@ name: CI
 on: [push]
 
 jobs:
-  CI:
+  security:
     runs-on: ubuntu-latest
     steps:
-    - name: Run Snyk to check for vulnerabilities
-    - uses: actions/checkout@master
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-    - name: NPM Install
-      uses: actions/setup-node@v1
-      with:
-        node-version: '13.x'
-      run: npm ci
-      env:
-        CI: true
-    - name: Build the image
-    - uses: actions/checkout@v1
-    - name: Build the image
-      run: docker-compose build
-      env:
-        ENVIRONMENT: production
-        MOCK: "false"
-        VAULT_URL: ${{ secrets.VAULT_URL }}
-        VAULT_TOKEN=: ${{ secrets.VAULT_TOKEN= }}
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+ 
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      if: success()
+      - uses: actions/checkout@v1
+      - name: NPM Install
+        uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+        run: npm ci
+        env:
+          CI: true
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      if: success()  
+      - name: Build docker image
+      - uses: actions/checkout@v1
+        env:
+          ENVIRONMENT: production
+          MOCK: "false"
+          VAULT_URL: ${{ secrets.VAULT_URL }}
+          VAULT_TOKEN=: ${{ secrets.VAULT_TOKEN= }}
+        run: docker-compose build
