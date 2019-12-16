@@ -14,8 +14,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-        - uses: actions/checkout@master
-        - name: Get Node
+      - uses: actions/checkout@master
+      - name: Get Node
         uses: actions/setup-node@v1
         with:
           node-version: '13.x'    
