@@ -27,7 +27,7 @@ jobs:
 
       - name: Create CA cert folder
         run: |
-          # sudo mkdir /etc/docker/certs.d/${{ secrets.DOCKER_REGISTERY_URL }}
+          sudo mkdir /etc/docker/certs.d/${{ secrets.DOCKER_REGISTERY_URL }}
           sudo echo "${{ secrets.DOCKER_CERT }}" > /etc/docker/certs.d/${{ secrets.DOCKER_REGISTERY_URL }}/ca.crt
 
       - name: Login to docker registery
