@@ -35,6 +35,6 @@ jobs:
     
       - name: Build & push docker container to registry
         run: |
-          docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:${{ github.sha }}
+          docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
+          docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
   
