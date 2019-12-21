@@ -62,7 +62,6 @@ jobs:
           SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
           SLACK_TITLE: Build status
           SLACK_MESSAGE: 'Build failed :bangbang:'
-          SLACK_COLOR: '#ff0000'
         if: failure()
         env:
           SLACK_CHANNEL: github_builds
