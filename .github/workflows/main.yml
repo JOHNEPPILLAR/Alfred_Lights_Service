@@ -51,22 +51,26 @@ jobs:
           docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
           docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
 
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@master
-        if: success()
-        env:
-          SLACK_CHANNEL: github_builds
-          SLACK_USERNAME: 'Github CI'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
-          SLACK_TITLE: Build status
-          SLACK_MESSAGE: 'Build passes :rocket:'
-        if: failure()
-        env:
-          SLACK_CHANNEL: github_builds
-          SLACK_USERNAME: 'Github CI'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
-          SLACK_TITLE: Build status
-          SLACK_MESSAGE: 'Build failed :bangbang:'
-          SLACK_COLOR: '#ff0000'
+      - name: Slack Notification on sucess
+      if: success()
+      uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_CHANNEL: github_builds
+        SLACK_USERNAME: 'Github CI'
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
+        SLACK_TITLE: Build status
+        SLACK_MESSAGE: 'Build passes :rocket:'
+
+
+      - name: Slack Notification on failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_CHANNEL: github_builds
+        SLACK_USERNAME: 'Github CI'
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
+        SLACK_TITLE: Build status
+        SLACK_MESSAGE: 'Build failed :bangbang:'
+        SLACK_COLOR: '#ff0000'
