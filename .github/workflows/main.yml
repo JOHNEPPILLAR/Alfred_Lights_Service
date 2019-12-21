@@ -60,7 +60,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
           SLACK_TITLE: Build status
-          SLACK_MESSAGE: 'Build passes :rocket:'
+          SLACK_MESSAGE: 'Build passed  :rocket:'
 
       - name: Slack Notification on failure
         if: failure()
@@ -71,5 +71,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
           SLACK_TITLE: Build status
-          SLACK_MESSAGE: 'Build failed :bangbang:'
+          SLACK_MESSAGE: 'Build failed  :bangbang:'
           SLACK_COLOR: '#ff0000'
