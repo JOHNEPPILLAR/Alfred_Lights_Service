@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [security, node]
     steps:
+      - uses: actions/checkout@master
       - name: Add private registery to docker deamon
         run: |
           echo "{ \"insecure-registries\": [\"${{ secrets.DOCKER_REGISTERY_URL }}\"] }" | sudo tee /etc/docker/daemon.json
@@ -49,4 +50,3 @@ jobs:
         run: |
           docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
           docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
- 
