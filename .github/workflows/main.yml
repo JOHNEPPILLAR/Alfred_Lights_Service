@@ -50,3 +50,17 @@ jobs:
         run: |
           docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
           docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_CHANNEL: github_builds
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#ff0000'
+          SLACK_ICON: ''
+          SLACK_TITLE: Build status
+          SLACK_MESSAGE: ':bangbang: Build failed'
+        if: success()
+        env:
+          SLACK_MESSAGE: ':rocket: Build passed'
