@@ -4,25 +4,37 @@ on: [push]
 
 jobs:
 
-  main:
+  security:
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+  node:
+    runs-on: ubuntu-latest
+    steps:    
       - name: Read .nvmrc
-        run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
+        run: echo "##[set-output name=NVMRC;]$(cat .node-version)"
         id: nvm
 
       - name: Use Node.js (.nvmrc)
         uses: actions/setup-node@v1
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
-      
+ 
+      - name: NPM Install
+        run: npm install
+        env:
+          CI: true
+            
+  build:
+    name: 🛠 Build
+    runs-on: ubuntu-latest
+    needs: [security, node]
+    steps:
       - name: Add private registery to docker deamon
         run: |
           echo "{ \"insecure-registries\": [\"${{ secrets.DOCKER_REGISTERY_URL }}\"] }" | sudo tee /etc/docker/daemon.json
@@ -36,7 +48,3 @@ jobs:
           docker build . -t ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
           docker push ${{ secrets.DOCKER_REGISTERY_URL }}/alfred_lights_service:latest
  
-      - name: NPM Install
-        run: npm install
-        env:
-          CI: true
