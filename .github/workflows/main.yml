@@ -60,7 +60,6 @@ jobs:
           SLACK_COLOR: '#ff0000'
           SLACK_ICON: ''
           SLACK_TITLE: Build status
-          SLACK_MESSAGE: ':bangbang: Build failed'
-        if: success()
-        env:
           SLACK_MESSAGE: ':rocket: Build passed'
+#          SLACK_MESSAGE: ':bangbang: Build failed'
+#        if: success()
