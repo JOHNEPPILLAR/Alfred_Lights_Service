@@ -5,6 +5,7 @@ on: [push]
 jobs:
 
   security:
+    name: 🛡️ Check for vulnerabilities
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -14,6 +15,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   node:
+    name: 📝 Setup node & check package install
     runs-on: ubuntu-latest
     steps:    
       - name: Read .nvmrc
@@ -31,7 +33,7 @@ jobs:
           CI: true
             
   build:
-    name: 🛠 Build
+    name: 🛠 Build and push docker container
     runs-on: ubuntu-latest
     needs: [security, node]
     steps:
