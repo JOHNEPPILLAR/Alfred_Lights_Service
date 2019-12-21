@@ -53,13 +53,22 @@ jobs:
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@master
+        if: success()
+        if: failure()
         env:
           SLACK_CHANNEL: github_builds
-          SLACK_USERNAME: rtCamp
+          SLACK_USERNAME: 'Github CI'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_COLOR: '#ff0000'
-          SLACK_ICON: ''
+          SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
           SLACK_TITLE: Build status
-          SLACK_MESSAGE: ':rocket: Build passed'
-#          SLACK_MESSAGE: ':bangbang: Build failed'
-#        if: success()
+          SLACK_MESSAGE: 'Build failed :bangbang:'
+          SLACK_COLOR: '#ff0000'
+        if: failure()
+        env:
+          SLACK_CHANNEL: github_builds
+          SLACK_USERNAME: 'Github CI'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://avatars2.githubusercontent.com/u/25100863?s=40&v=4
+          SLACK_TITLE: Build status
+          SLACK_MESSAGE: ':bangbang: Build failed'
+          SLACK_COLOR: '#ff0000'
