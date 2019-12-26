@@ -35,7 +35,8 @@ async function setupAndRun() {
   const certificate = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, `${process.env.VIRTUAL_HOST}_cert`);
 
   if (key instanceof Error || certificate instanceof Error) {
-    serviceHelper.log('info', 'Exit the app');
+    serviceHelper.log('error', 'Not able to get secret (CERTS) from vault');
+    serviceHelper.log('warn', 'Exit the app');
     process.exit(1); // Exit app
   }
   const server = restify.createServer({
@@ -81,7 +82,7 @@ async function setupAndRun() {
     // Check for valid auth key
     ClientAccessKey = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, 'ClientAccessKey');
     if (ClientAccessKey instanceof Error) {
-      serviceHelper.log('error', 'Vault service not running');
+      serviceHelper.log('error', 'Not able to get secret (ClientAccessKey) from vault');
       serviceHelper.sendResponse(
         res,
         500,
