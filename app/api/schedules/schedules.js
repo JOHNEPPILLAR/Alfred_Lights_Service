@@ -52,7 +52,8 @@ async function listSchedulesRoom(req, res, next) {
   try {
     const SQL = `SELECT * FROM light_schedules WHERE light_group_number = ${roomNumber} ORDER BY id`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -60,6 +61,7 @@ async function listSchedulesRoom(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -113,7 +115,8 @@ async function listSchedule(req, res, next) {
   try {
     const SQL = `SELECT * FROM light_schedules WHERE id = ${scheduleID}`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    const dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
     const results = await dbClient.query(SQL);
     serviceHelper.log(
@@ -121,6 +124,7 @@ async function listSchedule(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -158,7 +162,6 @@ async function saveSchedule(req, res, next) {
   serviceHelper.log('trace', `Params: ${JSON.stringify(req.params)}`);
   serviceHelper.log('trace', `Body: ${JSON.stringify(req.body)}`);
 
-  let dbClient;
   let results;
 
   const { scheduleID } = req.params;
@@ -200,7 +203,8 @@ async function saveSchedule(req, res, next) {
     ];
 
     serviceHelper.log('trace', 'Connect to data store connection pool');
-    dbClient = await global.lightsDataClient.connect(); // Connect to data store
+    const dbConnection = await serviceHelper.connectToDB('lights');
+    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Save sensor schedule');
     results = await dbClient.query(SQL, SQLValues);
     serviceHelper.log(
@@ -208,6 +212,7 @@ async function saveSchedule(req, res, next) {
       'Release the data store connection back to the pool',
     );
     await dbClient.release(); // Return data store connection back to pool
+    await dbClient.end(); // Close data store connection
 
     // Send data back to caler
     if (results.rowCount === 1) {
@@ -246,7 +251,7 @@ skill.put('/schedules/:scheduleID', saveSchedule);
  *       {
  *           "name": "<Anonymous Job 1>"
  *       },
- * 
+ *
  *   }
  *
  * @apiErrorExample {json} Error-Response:
@@ -259,7 +264,7 @@ skill.put('/schedules/:scheduleID', saveSchedule);
 async function globalSchedule(req, res, next) {
   serviceHelper.log('trace', 'Display in memory schedules');
 
-  const returnData = []; 
+  const returnData = [];
 
   global.schedules.forEach((value) => {
     returnData.push({ name: value.name });
