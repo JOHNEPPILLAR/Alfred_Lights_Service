@@ -18,12 +18,10 @@ exports.setup = async () => {
     if (lightNameData instanceof Error) {
       serviceHelper.log('error', lightNameData.message);
     } else {
-      lightNameData.forEach((value) => {
-        global.lightNames.push({
-          id: value.attributes.attributes.id,
-          name: value.attributes.attributes.name,
-        });
-      });
+      lightNameData.map((value) => global.lightNames.push({
+        id: value.attributes.attributes.id,
+        name: value.attributes.attributes.name,
+      }));
     }
   } catch (err) {
     serviceHelper.log('error', err.message);
@@ -35,12 +33,10 @@ exports.setup = async () => {
     if (lightGroupNameData instanceof Error) {
       serviceHelper.log('error', lightGroupNameData.message);
     } else {
-      lightGroupNameData.forEach((value) => {
-        global.lightGroupNames.push({
-          id: value.attributes.attributes.id,
-          name: value.attributes.attributes.name,
-        });
-      });
+      lightGroupNameData.map((value) => global.lightGroupNames.push({
+        id: value.attributes.attributes.id,
+        name: value.attributes.attributes.name,
+      }));
     }
   } catch (err) {
     serviceHelper.log('error', err.message);

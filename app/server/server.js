@@ -152,7 +152,7 @@ async function setupAndRun() {
       });
       await lightNames.setup();
       await sensors.setup(); // Monitor sensors
-      await schedules.setSchedule(true); // Setup light schedules
+      await schedules.setSchedule(); // Setup light schedules
     }
   });
 }

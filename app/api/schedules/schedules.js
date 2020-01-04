@@ -222,7 +222,7 @@ async function saveSchedule(req, res, next) {
       );
 
       serviceHelper.log('info', 'Reseting schedules');
-      await schedules.setSchedule(true); // re-set light schedules
+      await schedules.setSchedule(); // re-set light schedules
 
       serviceHelper.sendResponse(res, 200, 'saved');
     } else {
@@ -266,9 +266,7 @@ async function globalSchedule(req, res, next) {
 
   const returnData = [];
 
-  global.schedules.forEach((value) => {
-    returnData.push({ name: value.name });
-  });
+  global.schedules.map((value) => returnData.push({ name: value.name }));
 
   serviceHelper.sendResponse(res, 200, returnData);
   next();

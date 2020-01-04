@@ -44,7 +44,7 @@ exports.processData = async (sensor) => {
     serviceHelper.log('trace', 'Processing sensor data');
 
     // Living room lights are off so check motion and brightness
-    sensor.forEach((sensorItem) => {
+    sensor.map((sensorItem) => {
       if (sensorItem.attributes.attributes.id === '13') {
         // Motion sensor
         if (sensorItem.state.attributes.attributes.presence) motion = true;
@@ -54,8 +54,9 @@ exports.processData = async (sensor) => {
         if (
           sensorItem.state.attributes.attributes.lightlevel
           <= sensorItem.config.attributes.attributes.tholddark
-        ) { lowLight = true; }
+        ) lowLight = true;
       }
+      return true;
     });
 
     if (motion && lowLight) {
@@ -102,7 +103,7 @@ exports.processData = async (sensor) => {
 
           const currentTime = dateFormat(new Date(), 'HH:MM');
 
-          results.rows.forEach(async (lightInfo) => {
+          results.rows.map(async (lightInfo) => {
             if (
               currentTime >= lightInfo.start_time
               && currentTime <= lightInfo.end_time

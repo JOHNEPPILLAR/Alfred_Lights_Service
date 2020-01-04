@@ -20,29 +20,27 @@ async function setupSchedules() {
     'trace',
     'Removing any existing schedules and light/light group names',
   );
-  global.schedules.forEach((value) => {
-    value.cancel();
-  });
+  await global.schedules.map((value) => value.cancel());
 
   await allLightsOff.setup(); // All off schedules
   await lightsOff.setup(); // Off schedules
   await lightsOn.setup(); // On schedules
 }
 
-/**
- * Set up the schedules
- */
-exports.setSchedule = (runNow) => {
-  if (runNow) setupSchedules();
+// Set up the schedules
+exports.setSchedule = async () => {
+  await setupSchedules();
 
   // Set schedules each day to keep in sync with sunrise & sunset changes
   const rule = new scheduler.RecurrenceRule();
   rule.hour = 3;
   rule.minute = 5;
-  scheduler.scheduleJob(rule, () => {
+  const schedule = scheduler.scheduleJob(rule, () => {
     serviceHelper.log('info', 'Resetting daily schedules to keep in sync with sunrise & sunset changes');
     setupSchedules();
   }); // Set the schedule
+  global.schedules.push(schedule);
+
   serviceHelper.log(
     'info',
     `Reset schedules will run at: ${serviceHelper.zeroFill(
