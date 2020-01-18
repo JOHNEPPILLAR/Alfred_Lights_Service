@@ -5,13 +5,13 @@ const serviceHelper = require('alfred-helper');
 const restify = require('restify');
 const UUID = require('pure-uuid');
 const hueBridge = require('huejay');
-const { version } = require('../../package.json');
-const serviceName = require('../../package.json').description;
-const virtualHost = require('../../package.json').name;
 
 /**
  * Import helper libraries
  */
+const { version } = require('../../package.json');
+const serviceName = require('../../package.json').description;
+const virtualHost = require('../../package.json').name;
 const lightNames = require('../server/light-names.js');
 const sensors = require('../sensors/controller.js');
 const schedules = require('../schedules/controller.js');
