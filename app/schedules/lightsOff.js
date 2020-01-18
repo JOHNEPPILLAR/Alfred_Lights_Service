@@ -48,8 +48,7 @@ async function setupSchedule(data) {
   let rule = new scheduler.RecurrenceRule();
   if (data.ai_override) {
     serviceHelper.log('trace', 'AI override active');
-    const AlfredControllerService = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, 'AlfredControllerService');
-    const url = `${AlfredControllerService}/weather/sunrise`;
+    const url = `${process.env.ALFRED_CONTROLLER_SERVICE}/weather/sunrise`;
     const sunsetData = await serviceHelper.callAlfredServiceGet(url, true);
     if (sunsetData instanceof Error) {
       serviceHelper.log(

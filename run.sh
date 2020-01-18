@@ -2,8 +2,9 @@
 clear
 
 echo "The following node processes were found and will be killed:"
-lsof -i :3978
-kill -9 $(lsof -sTCP:LISTEN -i:3978 -t)
+export PORT=3978
+lsof -i :$PORT
+kill -9 $(lsof -sTCP:LISTEN -i:$PORT -t)
 
 echo "Removing node modules folder and installing latest"
 rm -rf node_modules
@@ -15,6 +16,7 @@ snyk test
 echo "Set env vars"
 export ENVIRONMENT="development"
 export MOCK="false"
+export ALFRED_CONTROLLER_SERVICE="https://alfred_controller_service:3979"
 
 echo "Run the server"
 npm run local
