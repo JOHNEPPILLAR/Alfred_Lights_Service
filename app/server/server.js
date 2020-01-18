@@ -139,7 +139,7 @@ async function setupAndRun() {
   // Start service and listen to requests
   server.listen(process.env.PORT, async () => {
     serviceHelper.log('info', `${serviceName} has started`);
-    if (process.env.MOCK === 'true' || process.env.Mock === 'lights') {
+    if (process.env.MOCK === 'true' || process.env.MOCK === 'lights') {
       serviceHelper.log('info', 'Mocking enabled, will not setup monitors or schedules');
     } else {
       // Setup Hue bridge
