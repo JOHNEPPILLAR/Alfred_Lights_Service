@@ -108,8 +108,8 @@ exports.setup = async () => {
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.release(); // Return data store connection back to pool
     await dbClient.end(); // Close data store connection
+    
 
     if (results.rowCount === 0) {
       // Exit function as no data to process
