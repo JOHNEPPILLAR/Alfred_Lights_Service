@@ -141,7 +141,6 @@ async function listSensorsTimers(req, res, next) {
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.release(); // Return data store connection back to pool
     await dbClient.end(); // Close data store connection
 
     // Send data back to caler
@@ -203,7 +202,6 @@ async function listSensorSchedule(req, res, next) {
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.release(); // Return data store connection back to pool
     await dbClient.end(); // Close data store connection
 
     // Send data back to caler
@@ -266,7 +264,6 @@ async function listSensorSchedulesRoom(req, res, next) {
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.release(); // Return data store connection back to pool
     await dbClient.end(); // Close data store connection
 
     // Send data back to caler
@@ -354,7 +351,6 @@ async function saveSensors(req, res, next) {
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.release(); // Return data store connection back to pool
     await dbClient.end(); // Close data store connection
 
     // Send data back to caler
