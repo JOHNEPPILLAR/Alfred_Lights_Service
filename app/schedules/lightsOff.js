@@ -95,15 +95,13 @@ exports.setup = async () => {
     const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM light_schedules WHERE type = 2';
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights off timer settings');
-    results = await dbClient.query(SQL);
+    results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
-
+    await dbConnection.end(); // Close data store connection
     if (results.rowCount === 0) {
       // Exit function as no data to process
       serviceHelper.log('info', 'No lights off timers are active');

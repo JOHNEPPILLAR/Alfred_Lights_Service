@@ -75,15 +75,13 @@ exports.processData = async (sensor) => {
           const SQL = 'SELECT start_time, end_time, light_group_number, light_action, brightness, turn_off, scene FROM sensor_schedules WHERE active AND sensor_id = 1';
           serviceHelper.log('trace', 'Connect to data store connection pool');
           const dbConnection = await serviceHelper.connectToDB('lights');
-          const dbClient = await dbConnection.connect(); // Connect to data store
           serviceHelper.log('trace', 'Get list of active services');
-          results = await dbClient.query(SQL);
+          results = await dbConnection.query(SQL);
           serviceHelper.log(
             'trace',
             'Release the data store connection back to the pool',
           );
-          await dbClient.end(); // Close data store connection
-
+          await dbConnection.end(); // Close data store connection
           if (results.rowCount === 0) {
             serviceHelper.log(
               'trace',

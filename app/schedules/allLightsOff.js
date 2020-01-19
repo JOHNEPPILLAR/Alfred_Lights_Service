@@ -64,15 +64,13 @@ exports.setup = async () => {
     const SQL = 'SELECT name, hour, minute FROM light_schedules WHERE type = 0 AND active AND light_group_number = 0';
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights off schedule settings');
-    results = await dbClient.query(SQL);
+    results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
-
+    await dbConnection.end(); // Close data store connection
     if (results.rowCount === 0) {
       // Exit function as no data to process
       serviceHelper.log('info', 'No lights off schedules are active');
@@ -80,9 +78,7 @@ exports.setup = async () => {
     }
 
     // Setup schedules
-    async.eachSeries(results.rows, async (info) => {
-      setupSchedule(info);
-    });
+    async.eachSeries(results.rows, async (info) => setupSchedule(info));
     return true;
   } catch (err) {
     serviceHelper.log('error', err.message);

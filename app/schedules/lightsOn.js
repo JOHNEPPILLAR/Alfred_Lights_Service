@@ -101,16 +101,13 @@ exports.setup = async () => {
     const SQL = 'SELECT name, hour, minute, light_group_number, brightness, scene, color_loop, ai_override FROM vw_lights_on_schedules';
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get lights on timer settings');
-    results = await dbClient.query(SQL);
+    results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
-    
-
+    await dbConnection.end(); // Close data store connection
     if (results.rowCount === 0) {
       // Exit function as no data to process
       serviceHelper.log('info', 'No lights on timers are active');
