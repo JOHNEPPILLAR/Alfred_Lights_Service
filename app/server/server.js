@@ -29,7 +29,6 @@ global.schedules = [];
 let ClientAccessKey;
 
 async function setupAndRun() {
-  // Restify server Init
   serviceHelper.log('trace', 'Getting certs');
   const key = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, `${virtualHost}_key`);
   const certificate = await serviceHelper.vaultSecret(process.env.ENVIRONMENT, `${virtualHost}_cert`);
