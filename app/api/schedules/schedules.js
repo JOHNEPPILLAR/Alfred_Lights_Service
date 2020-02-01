@@ -53,14 +53,13 @@ async function listSchedulesRoom(req, res, next) {
     const SQL = `SELECT * FROM light_schedules WHERE light_group_number = ${roomNumber} ORDER BY id`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
-    const results = await dbClient.query(SQL);
+    const results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
+    await dbConnection.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -115,14 +114,13 @@ async function listSchedule(req, res, next) {
     const SQL = `SELECT * FROM light_schedules WHERE id = ${scheduleID}`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get sensors');
-    const results = await dbClient.query(SQL);
+    const results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
+    await dbConnection.end(); // Close data store connection
 
     // Send data back to caler
     serviceHelper.sendResponse(res, true, results.rows);
@@ -202,14 +200,13 @@ async function saveSchedule(req, res, next) {
 
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Save sensor schedule');
-    results = await dbClient.query(SQL, SQLValues);
+    results = await dbConnection.query(SQL, SQLValues);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
+    await dbConnection.end(); // Close data store connection
 
     // Send data back to caler
     if (results.rowCount === 1) {
