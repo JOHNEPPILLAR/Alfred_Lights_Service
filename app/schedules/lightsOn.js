@@ -36,15 +36,20 @@ function lightsOn(data) {
 }
 
 async function setupSchedule(data) {
-  serviceHelper.log(
-    'trace',
-    `Create lights on schedule for ${data.name}`,
-  );
-
   if (data.hour === null || data.minute === null) {
     serviceHelper.log('error', 'Schedule values were null');
-    return false;
+    return;
   }
+
+  if (data.light_group_number === 4) { // 4 = Girls room
+    const kidsAtHomeToday = await serviceHelper.kidsAtHomeToday();
+    if (!kidsAtHomeToday) {
+      serviceHelper.log('trace', 'Override turning on as girls are not staying');
+      return;
+    }
+  }
+
+  serviceHelper.log('trace', `Create lights on schedule for ${data.name}`);
   let rule = new scheduler.RecurrenceRule();
   if (data.ai_override) {
     serviceHelper.log('trace', 'Getting sunset data');
@@ -86,7 +91,6 @@ async function setupSchedule(data) {
     )}:${serviceHelper.zeroFill(rule.minute, 2)}`,
   );
   rule = null; // Clear timer values
-  return true;
 }
 
 /**
