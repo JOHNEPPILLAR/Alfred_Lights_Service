@@ -44,7 +44,7 @@ async function setupSchedule(data) {
   if (data.light_group_number === 4) { // 4 = Girls room
     const kidsAtHomeToday = await serviceHelper.kidsAtHomeToday();
     if (!kidsAtHomeToday) {
-      serviceHelper.log('trace', 'Override turning on as girls are not staying');
+      serviceHelper.log('info', 'Override turning on as girls are not staying');
       return;
     }
   }
