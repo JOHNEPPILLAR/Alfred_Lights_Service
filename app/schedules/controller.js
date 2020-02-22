@@ -3,6 +3,7 @@
  */
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const dateformat = require('dateformat');
 
 /**
  * Import helper libraries
@@ -11,41 +12,29 @@ const allLightsOff = require('./allLightsOff.js');
 const lightsOn = require('./lightsOn.js');
 const lightsOff = require('./lightsOff.js');
 
-/**
- * Setup light and light group names
- */
-async function setupSchedules() {
+// Set up the schedules
+async function setSchedule() {
   // Cancel any existing schedules
   serviceHelper.log(
     'trace',
-    'Removing any existing schedules and light/light group names',
+    'Removing any existing schedules',
   );
   await global.schedules.map((value) => value.cancel());
 
+  // Set schedules each day to keep in sync with sunrise & sunset changes
+  const date = new Date();
+  date.setHours(3);
+  date.setMinutes(5);
+  date.setTime(date.getTime() + 1 * 86400000);
+  const schedule = scheduler.scheduleJob(date, () => setSchedule()); // Set the schedule
+  global.schedules.push(schedule);
+  serviceHelper.log(
+    'info',
+    `Reset schedules will run on ${dateformat(date, 'dd-mm-yyyy @ HH:MM')}`,
+  );
   await allLightsOff.setup(); // All off schedules
   await lightsOff.setup(); // Off schedules
   await lightsOn.setup(); // On schedules
 }
 
-// Set up the schedules
-exports.setSchedule = async () => {
-  await setupSchedules();
-
-  // Set schedules each day to keep in sync with sunrise & sunset changes
-  const rule = new scheduler.RecurrenceRule();
-  rule.hour = 3;
-  rule.minute = 5;
-  const schedule = scheduler.scheduleJob(rule, () => {
-    serviceHelper.log('info', 'Resetting daily schedules to keep in sync with sunrise & sunset changes');
-    setupSchedules();
-  }); // Set the schedule
-  global.schedules.push(schedule);
-
-  serviceHelper.log(
-    'info',
-    `Reset schedules will run at: ${serviceHelper.zeroFill(
-      rule.hour,
-      2,
-    )}:${serviceHelper.zeroFill(rule.minute, 2)}`,
-  );
-};
+exports.setSchedule = setSchedule;

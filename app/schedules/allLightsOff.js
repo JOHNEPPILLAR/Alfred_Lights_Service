@@ -3,6 +3,7 @@
  */
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const dateformat = require('dateformat');
 
 /**
  * Import helper libraries
@@ -14,9 +15,7 @@ function allLightsOff() {
     serviceHelper.log('info', 'Lights off schedule - Turning off all lights');
     const req = { params: { lightGroupNumber: 0 }, body: { lightAction: 'off' } };
     const updateLights = lightGroupHelper.updateLightGroup(req);
-    if (updateLights instanceof Error) {
-      throw new Error('There was an error turning off the lights');
-    }
+    if (updateLights instanceof Error) throw new Error('There was an error turning off the lights');
     return true;
   } catch (err) {
     serviceHelper.log('error', err.message);
@@ -34,21 +33,16 @@ function setupSchedule(data) {
     serviceHelper.log('warn', 'Schedule values were null');
     return false;
   }
-  let rule = new scheduler.RecurrenceRule();
-  rule.hour = data.hour;
-  rule.minute = data.minute;
-  const schedule = scheduler.scheduleJob(rule, () => {
-    allLightsOff();
-  });
+
+  const date = new Date();
+  date.setHours(data.hour);
+  date.setMinutes(data.minute);
+  const schedule = scheduler.scheduleJob(date, () => allLightsOff());
   global.schedules.push(schedule);
   serviceHelper.log(
     'info',
-    `${data.name} schedule will run at: ${serviceHelper.zeroFill(
-      rule.hour,
-      2,
-    )}:${serviceHelper.zeroFill(rule.minute, 2)}`,
+    `${data.name} schedule will run at ${dateformat(date, 'dd-mm-yyyy @ HH:MM')}`,
   );
-  rule = null; // Clear schedule values
   return true;
 }
 

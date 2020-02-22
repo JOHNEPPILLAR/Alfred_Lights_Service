@@ -4,6 +4,7 @@
 const dateFormat = require('dateformat');
 const scheduler = require('node-schedule');
 const serviceHelper = require('alfred-helper');
+const dateformat = require('dateformat');
 
 /**
  * Import helper libraries
@@ -50,7 +51,7 @@ async function setupSchedule(data) {
   }
 
   serviceHelper.log('trace', `Create lights on schedule for ${data.name}`);
-  let rule = new scheduler.RecurrenceRule();
+  const date = new Date();
   if (data.ai_override) {
     serviceHelper.log('trace', 'Getting sunset data');
     const url = `${process.env.ALFRED_CONTROLLER_SERVICE}/weather/sunset`;
@@ -61,8 +62,8 @@ async function setupSchedule(data) {
         'error',
         sunsetData.message,
       );
-      rule.hour = data.hour;
-      rule.minute = data.minute;
+      date.setHours(data.hour);
+      date.setMinutes(data.minute);
     } else {
       const sunSet = new Date(`${'01/01/1900 '}${sunsetData.data}`);
       sunSet.setMinutes(sunSet.getMinutes() - 30);
@@ -72,25 +73,19 @@ async function setupSchedule(data) {
         sunSet.setHours(17);
         sunSet.setMinutes(0);
       }
-      rule.hour = sunSet.getHours();
-      rule.minute = sunSet.getMinutes();
+      date.setHours(sunSet.getHours());
+      date.setMinutes(sunSet.getMinutes());
     }
   } else {
-    rule.hour = data.hour;
-    rule.minute = data.minute;
+    date.setHours(data.hour);
+    date.setMinutes(data.minute);
   }
-  const schedule = scheduler.scheduleJob(rule, () => {
-    lightsOn(data);
-  });
+  const schedule = scheduler.scheduleJob(date, () => lightsOn(data));
   global.schedules.push(schedule);
   serviceHelper.log(
     'info',
-    `${data.name} schedule will run at: ${serviceHelper.zeroFill(
-      rule.hour,
-      2,
-    )}:${serviceHelper.zeroFill(rule.minute, 2)}`,
+    `${data.name} schedule will run at ${dateformat(date, 'dd-mm-yyyy @ HH:MM')}`,
   );
-  rule = null; // Clear timer values
 }
 
 /**
