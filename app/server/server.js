@@ -148,6 +148,14 @@ async function setupAndRun() {
         host: HueBridgeIP,
         username: HueBridgeUser,
       });
+      global.hue.bridge.isAuthenticated()
+      .then(() => {
+        serviceHelper.log('info', 'Connected to Hue bridge');
+      })
+      .catch(err => {
+        serviceHelper.log('error', err.message);
+        return;
+      });
       await lightNames.setup();
       await sensors.setup(); // Monitor sensors
       await schedules.setSchedule(); // Setup light schedules
