@@ -19,7 +19,10 @@ async function setSchedule() {
     'trace',
     'Removing any existing schedules',
   );
-  await global.schedules.map((value) => value.cancel());
+  await global.schedules.map((value) => {
+    if (value) value.cancel();
+    return true;
+  });
 
   // Set schedules each day to keep in sync with sunrise & sunset changes
   const date = new Date();
