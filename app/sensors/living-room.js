@@ -16,14 +16,13 @@ async function checkOffTimerIsActive(timerID) {
     const SQL = `SELECT name FROM light_schedules WHERE id = ${timerID} AND active`;
     serviceHelper.log('trace', 'Connect to data store connection pool');
     const dbConnection = await serviceHelper.connectToDB('lights');
-    const dbClient = await dbConnection.connect(); // Connect to data store
     serviceHelper.log('trace', 'Get list of active services');
-    const results = await dbClient.query(SQL);
+    const results = await dbConnection.query(SQL);
     serviceHelper.log(
       'trace',
       'Release the data store connection back to the pool',
     );
-    await dbClient.end(); // Close data store connection
+    await dbConnection.end(); // Close data store connection
     if (results.rowCount === 0) active = false;
     return active;
   } catch (err) {
