@@ -1,9 +1,9 @@
 /**
  * Import external libraries
  */
+const serviceHelper = require('alfred-helper');
 const dateFormat = require('dateformat');
 const scheduler = require('node-schedule');
-const serviceHelper = require('alfred-helper');
 const dateformat = require('dateformat');
 
 /**
@@ -43,7 +43,8 @@ async function setupSchedule(data) {
   }
 
   if (data.light_group_number === 4) { // 4 = Girls room
-    const kidsAtHomeToday = await serviceHelper.kidsAtHomeToday();
+    let kidsAtHomeToday = await serviceHelper.kidsAtHomeToday();
+    if (kidsAtHomeToday instanceof Error) kidsAtHomeToday = false;
     if (!kidsAtHomeToday) {
       serviceHelper.log('info', 'Override schedule: Girls are not staying');
       return;
