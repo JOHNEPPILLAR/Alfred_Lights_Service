@@ -1,0 +1,41 @@
+{
+    "title": "update sensor schedule",
+    "description": "describes properties required to update sensor schedule",
+    "type": "object",
+    "properties": {
+      "sensorID": {
+        "type": "string",
+        "description": "Schedule ID"
+      },
+      "startTime": {
+        "type": "string",
+        "description": "Schedule start time"
+      },
+      "endTime": {
+        "type": "string",
+        "description": "Schedule end time"
+      },
+      "lightGroupNumber": {
+        "type": "number",
+        "description": "Light group number"
+      },
+      "brightness": {
+        "type": "number",
+        "description": "Brightness of light group"
+      },
+      "turnOff": {
+        "type": "string",
+        "description": "Turn off after 3 mins"
+      },
+      "active": {
+        "type": "boolean",
+        "description": "Device active"
+      },
+      "scene": {
+        "type": "number",
+        "description": "Color scene"
+      }
+    },
+    "required": ["scheduleID"]
+  }
+  

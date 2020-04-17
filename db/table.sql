@@ -4,7 +4,6 @@ CREATE TABLE sensor_schedules (
   start_time         TEXT               NOT NULL,
   end_time           TEXT               NOT NULL,
   light_group_number INT                NOT NULL,
-  light_action       TEXT               NOT NULL,
   brightness         INT                NOT NULL,
   scene              INT                NULL,  
   turn_off           TEXT               NOT NULL DEFAULT 'TRUE',

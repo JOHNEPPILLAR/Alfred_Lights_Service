@@ -1,0 +1,29 @@
+{
+    "title": "update light",
+    "description": "describes properties required to update light settings",
+    "type": "object",
+    "properties": {
+      "lightNumber": {
+        "type": "string",
+        "description": "Light number"
+      },
+      "power": {
+        "type": "boolean",
+        "description": "Light on"
+      },
+      "brightness": {
+        "type": "number",
+        "description": "Light brightness"
+      },
+      "scene": {
+        "type": "number",
+        "description": "Light scene"
+      },
+      "colorLoop": {
+        "type": "boolean",
+        "description": "Put light into color loop"
+      }
+    },
+    "required": ["lightNumber"]
+  }
+  
