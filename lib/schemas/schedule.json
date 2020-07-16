@@ -1,0 +1,52 @@
+{
+  "title": "update schedule",
+  "description": "describes properties required to update schedule",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Schedule ID"
+    },
+    "type": {
+      "type": "number",
+      "description": "type"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name"
+    },
+    "hour": {
+      "type": "number",
+      "description": "Schedule start hour"
+    },
+    "minute": {
+      "type": "number",
+      "description": "Schedule minute"
+    },
+    "aiOverride": {
+      "type": "boolean",
+      "description": "Default time override"
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Device active"
+    },
+    "lightGroupNumber": {
+      "type": "number",
+      "description": "Light group number"
+    },
+    "brightness": {
+      "type": "number",
+      "description": "Brightness of light group"
+    },
+    "scene": {
+      "type": ["number", "null"],
+      "description": "Color scene"
+    },
+    "colorLoop": {
+      "type": "boolean",
+      "description": "Color loop active"
+    }
+  },
+  "required": ["id"]
+}

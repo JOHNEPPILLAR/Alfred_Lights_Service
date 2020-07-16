@@ -6,9 +6,11 @@ export PORT=3978
 lsof -i :$PORT
 kill -9 $(lsof -sTCP:LISTEN -i:$PORT -t)
 
-echo "Removing node modules folder and installing latest"
-rm -rf node_modules
-rm package-lock.json
+echo "Installing latest"
+#rm -rf node_modules
+#rm package-lock.json
+#rm -rf node_modules/alfred-base
+
 ncu -u
 npm install
 npm audit fix
