@@ -19,7 +19,7 @@
     "alfred_base_service": "git://github.com/johneppillar/alfred_base_service.git",
     "dateformat": "^3.0.3",
     "huejay": "^1.9.0",
-    "snyk": "^1.369.2"
+    "snyk": "^1.369.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
