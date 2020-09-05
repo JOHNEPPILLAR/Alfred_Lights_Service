@@ -26,7 +26,7 @@ snyk test
 echo "Set env vars"
 export ENVIRONMENT="development"
 export MOCK="false"
-export ALFRED_WEATHER_SERVICE="https://alfred_weather_service:3979"
+export ALFRED_WEATHER_SERVICE="https://alfred_weather_service:3981/weather"
 
 echo "Run the server"
 npm run local
