@@ -3,10 +3,6 @@
   "description": "describes properties required to update sensor schedule",
   "type": "object",
   "properties": {
-    "sensorID": {
-      "type": "number",
-      "description": "Sensor ID"
-    },
     "startTime": {
       "type": "string",
       "description": "Schedule start time"
@@ -35,6 +31,5 @@
       "type": "number",
       "description": "Color scene"
     }
-  },
-  "required": ["sensorID"]
+  }
 }
