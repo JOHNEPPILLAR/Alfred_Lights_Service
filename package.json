@@ -18,7 +18,7 @@
     "alfred-helper": "git://github.com/johneppillar/alfred_helper",
     "dateformat": "^3.0.3",
     "huejay": "^1.9.0",
-    "snyk": "^1.425.3"
+    "snyk": "^1.426.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
