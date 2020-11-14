@@ -6,10 +6,16 @@ ignore:
     - huejay > axios:
         reason: None given
         expires: '2020-12-14T11:01:30.371Z'
+      axios:
+        reason: None given
+        expires: '2020-12-14T11:15:03.646Z'
+    - huejay > axios:
+        reason: None given
+        expires: '2020-12-14T11:15:03.646Z'
   SNYK-JS-NODEFORGE-598677:
     - apn > node-forge:
         reason: None given
-        expires: '2020-12-14T11:01:30.371Z'
+        expires: '2020-12-14T11:15:03.646Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   SNYK-JS-LODASH-450202:
