@@ -10,6 +10,7 @@
     "brightness": null,
     "colorLoop": false,
     "scene": null,
+    "turnOff": true,
     "active": true
   },
   {
@@ -23,6 +24,7 @@
     "brightness": null,
     "colorLoop": false,
     "scene": null,
+    "turnOff": true,
     "active": true
   },
   {
@@ -36,6 +38,7 @@
     "brightness": 250,
     "colorLoop": false,
     "scene": 3,
+    "turnOff": true,
     "active": true
   },
   {
@@ -49,6 +52,7 @@
     "brightness": 100,
     "colorLoop": true,
     "scene": null,
+    "turnOff": true,
     "active": true
   },
   {
@@ -62,6 +66,7 @@
     "brightness": 120,
     "colorLoop": false,
     "scene": 3,
+    "turnOff": true,
     "active": true
   },
   {
@@ -75,6 +80,7 @@
     "brightness": null,
     "colorLoop": false,
     "scene": null,
+    "turnOff": true,
     "active": true
   }
 ]
