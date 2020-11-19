@@ -14,9 +14,9 @@
   "dependencies": {
     "alfred-base": "git://github.com/johneppillar/alfred_base_service",
     "alfred-helper": "git://github.com/johneppillar/alfred_helper",
-    "dateformat": "^3.0.3",
+    "dateformat": "^4.0.0",
     "huejay": "^1.9.0",
-    "snyk": "^1.428.0"
+    "snyk": "^1.428.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
