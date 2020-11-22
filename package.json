@@ -16,6 +16,7 @@
     "alfred-helper": "git://github.com/johneppillar/alfred_helper",
     "dateformat": "^4.0.0",
     "huejay": "^1.9.0",
+    "dotenv": "^8.2.0",
     "snyk": "^1.430.0"
   },
   "devDependencies": {
