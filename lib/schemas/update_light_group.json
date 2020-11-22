@@ -1,0 +1,29 @@
+{
+    "title": "update light group",
+    "description": "describes properties required to update light group settings",
+    "type": "object",
+    "properties": {
+      "lightGroupNumber": {
+        "type": "string",
+        "description": "Light group number"
+      },
+      "power": {
+        "type": "boolean",
+        "description": "Light group on"
+      },
+      "brightness": {
+        "type": "number",
+        "description": "Light group brightness"
+      },
+      "scene": {
+        "type": "number",
+        "description": "Light group scene"
+      },
+      "colorLoop": {
+        "type": "boolean",
+        "description": "Put light group into color loop"
+      }
+    },
+    "required": ["lightGroupNumber"]
+  }
+  

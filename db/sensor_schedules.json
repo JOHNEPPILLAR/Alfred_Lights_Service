@@ -1,0 +1,172 @@
+[
+  {
+    "id": 1,
+    "lightGroup": 7,
+    "startTime": "00:00",
+    "endTime": "07:30",
+    "brightness": 40,
+    "scene": 4,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 2,
+    "lightGroup": 7,
+    "startTime": "07:30",
+    "endTime": "09:00",
+    "brightness": 132,
+    "scene": 1,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 3,
+    "lightGroup": 7,
+    "startTime": "09:00",
+    "endTime": "19:00",
+    "brightness": 185,
+    "scene": 2,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 4,
+    "lightGroup": 7,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "brightness": 132,
+    "scene": 3,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 5,
+    "lightGroup": 7,
+    "startTime": "21:00",
+    "endTime": "00:00",
+    "brightness": 40,
+    "scene": 4,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 6,
+    "lightGroup": 8,
+    "startTime": "00:00",
+    "endTime": "07:00",
+    "brightness": 40,
+    "scene": 4,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 7,
+    "lightGroup": 8,
+    "startTime": "07:00",
+    "endTime": "08:00",
+    "brightness": 40,
+    "scene": 4,
+    "turnOff": false,
+    "active": true
+  },
+  {
+    "id": 8,
+    "lightGroup": 8,
+    "startTime": "08:00",
+    "endTime": "09:00",
+    "brightness": 132,
+    "scene": 1,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 9,
+    "lightGroup": 8,
+    "startTime": "09:00",
+    "endTime": "15:30",
+    "brightness": 185,
+    "scene": 2,
+    "turnOff": true,
+    "active": true
+  },
+  {
+    "id": 10,
+    "lightGroup": 8,
+    "startTime": "15:30",
+    "endTime": "19:00",
+    "brightness": 185,
+    "scene": 2,
+    "turnOff": false,
+    "active": true
+  },
+  {
+    "id": 11,
+    "lightGroup": 8,
+    "startTime": "19:00",
+    "endTime": "22:00",
+    "brightness": 132,
+    "scene": 3,
+    "turnOff": false,
+    "active": true
+  },
+  {
+    "id": 12,
+    "lightGroup": 8,
+    "startTime": "22:00",
+    "endTime": "00:00",
+    "brightness": 40,
+    "scene": 4,
+    "turnOff": true,
+    "active": true
+  },
+  {
+  "id": 13,
+  "lightGroup": 6,
+  "startTime": "00:00",
+  "endTime": "07:30",
+  "brightness": 40,
+  "scene": 4,
+  "turnOff": true,
+  "active": true
+},
+{
+  "id": 14,
+  "lightGroup": 6,
+  "startTime": "07:30",
+  "endTime": "09:00",
+  "brightness": 132,
+  "scene": 1,
+  "turnOff": true,
+  "active": true
+},
+{
+  "id": 15,
+  "lightGroup": 6,
+  "startTime": "09:00",
+  "endTime": "19:00",
+  "brightness": 185,
+  "scene": 2,
+  "turnOff": true,
+  "active": true
+},
+{
+  "id": 16,
+  "lightGroup": 6,
+  "startTime": "19:00",
+  "endTime": "21:00",
+  "brightness": 132,
+  "scene": 3,
+  "turnOff": true,
+  "active": true
+},
+{
+  "id": 17,
+  "lightGroup": 6,
+  "startTime": "21:00",
+  "endTime": "00:00",
+  "brightness": 40,
+  "scene": 4,
+  "turnOff": true,
+  "active": true
+}
+]
