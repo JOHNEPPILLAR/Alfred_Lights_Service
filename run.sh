@@ -41,8 +41,8 @@ export APP_TOKEN=${APP_TOKEN:1:${#APP_TOKEN}-2}
 
 export DEBUG="Lights:*"
 
-echo "Run snyk"
-npm run test
+#echo "Run snyk"
+#npm run test
 
 echo "Run the server"
 npm run local
